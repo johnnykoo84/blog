@@ -8,7 +8,7 @@
 export const siteTitle = 'bloKoo';
 export const siteDescription = '나의 생각을 정리하여 기록하는 공간';
 export const siteURL = 'blog.ilmokoo.com';
-export const siteLink = 'https://github.com/josh-collinsworth/sveltekit-blog-starter';
+export const siteLink = 'https://blog-six-opal-20.vercel.app';
 export const siteAuthor = 'Ilmo Koo';
 
 // Controls how many posts are shown per page on the main blog index pages
