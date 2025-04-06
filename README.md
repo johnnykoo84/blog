@@ -1,4 +1,4 @@
-![van-gogh](/static/images/van.png)
+![van-gogh](/images/van.png)
 
 남을 위해, 남의 평가를 위해 인생을 살기엔 너무 인생이 짧다.
 하지만 인간은 남고 함께 살아가야하는 사회적 존재다.
