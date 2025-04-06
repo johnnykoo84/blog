@@ -1,21 +1,8 @@
 <svelte:head>
-	<title>About</title>
+
+<title>메뉴 이름</title>
 </svelte:head>
 
-# About
+# 제목
 
-This is an example of how you can have _markdown_ in page content!
-
-- How
-- **Cool**
-- Is _that_!?
-
-If you like, you can also import markdown into any Svelte page.
-
-Anyway, you can find this file here:
-
-```
-src/routes/about/+page.md
-```
-
-Here's the [home link](/) if you wanna go back.
+샘플로 남겨둠
