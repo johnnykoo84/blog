@@ -1,35 +1,15 @@
 ---
-title: "Automatic heading links in mdsvex"
-date: "2023-10-26"
-updated: "2023-10-26"
+title: '다시 첫 글'
+date: '2025-04-06'
+updated: '2025-04-06'
 categories:
-  - "sveltekit"
-  - "markdown"
-coverImage: "/images/jefferson-santos-fCEJGBzAkrU-unsplash.jpg"
+  - '블로그'
+coverImage: '/images/jefferson-santos-fCEJGBzAkrU-unsplash.jpg'
 coverWidth: 16
 coverHeight: 9
 excerpt: Check out how heading links work with this starter in this post.
 ---
 
-Here are some headings:
+그 동안 여러 블로그 플랫폼을 이사다니며 가장 최근엔 Gatsby로 꽤 오래 유지했었다. 그러나 글을 쓰지 않은지 너무 오랜 시간이 지났고, 그 사이에 Gatsby 의 존속이 의심되기 시작했다. 그래서 Svelte + Vercel 로 다시 돌아오게 되었다. Svetle 5 부터 Svelte를 접했기 때문에 5버전을 사용하고 싶었고, 둔더더기 없고 가벼운 템플릿을 찾고 있었는데 마침 좋은 템플릿을 찾았다. 기본 영문, 한글 폰트도 괜찮고, 더 추가 수정하는게 귀찮기도 해서 이걸로 선택했다.
 
-## Here's an h2
-
-Lorem ipsum dolor sit amet
-
-### This is an h3
-
-Lorem ipsum dolor sit amet
-
-#### As you've probably guessed, this is an h4
-
-Lorem ipsum dolor sit amet
-
-##### This, of course, is an h5
-
-Lorem ipsum dolor sit amet
-
-###### We're deep in h6 territory now
-
-Lorem ipsum dolor sit amet
-
+[내가 선택한 블로그 템플릿 소스코드](https://github.com/josh-collinsworth/sveltekit-blog-starter) 는 링크를 클릭하면 fork 해서 사용할 수 있다. 특별히 만질 것 없이 바로 블로그 글을 작성할 수 있어 기쁘다. 알다시피 Svelte는 미친듯이 빠르다. 🚀 ⚡ 옛날에 Gatsby로 블로그 템플릿 수정해서 쓸 때, GraphQL 등 배워가며 고생했던 기억이 있는데, Svelte는 알다시피 그런 어려움이 없다.
