@@ -1,7 +1,7 @@
 ---
 title: '탄핵 Again'
-date: '2024-04-04'
-updated: '2024-04-04'
+date: '2025-04-04'
+updated: '2025-04-04'
 categories:
   - '민주주의'
   - '한국'
