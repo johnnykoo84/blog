@@ -22,36 +22,42 @@
 	<!-- <meta name="twitter:image" content="https://yourdomain.com/image_path" /> -->
 </svelte:head>
 
-<article class="post">
+<article class="max-w-4xl mx-auto px-4 py-8">
 	<!-- You might want to add an alt frontmatter attribute. If not, leaving alt blank here works, too. -->
-	<img
-		class="cover-image"
-		src={coverImage}
-		alt=""
-		style="aspect-ratio: {coverWidth} / {coverHeight};"
-		width={coverWidth}
-		height={coverHeight}
-	/>
+	{#if coverImage}
+		<img
+			class="w-full h-auto rounded-lg shadow-lg mb-8"
+			src={coverImage}
+			alt=""
+			style="aspect-ratio: {coverWidth} / {coverHeight};"
+			width={coverWidth}
+			height={coverHeight}
+		/>
+	{/if}
 
-	<h1>{title}</h1>
+	<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{title}</h1>
 
-	<div class="meta">
-		<b>Published:</b>
-		{date}
-		<br />
-		<b>Updated:</b>
-		{updated}
+	<div class="text-sm text-gray-600 dark:text-gray-400 mb-8 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg">
+		<p><span class="font-semibold">Published:</span> {date}</p>
+		{#if updated}
+			<p><span class="font-semibold">Updated:</span> {updated}</p>
+		{/if}
 	</div>
 
-	<PostContent />
+	<div class="prose prose-lg max-w-none dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-purple-600 dark:prose-a:text-purple-400 prose-strong:text-gray-900 dark:prose-strong:text-white">
+		<PostContent />
+	</div>
 
 	{#if categories}
-		<aside class="post-footer">
-			<h2>Posted in:</h2>
-			<ul class="post-footer__categories">
+		<aside class="mt-12 p-6 bg-gray-50 dark:bg-slate-800 rounded-lg">
+			<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Posted in:</h2>
+			<ul class="flex flex-wrap gap-2">
 				{#each categories as category}
 					<li>
-						<a href="/blog/category/{category}/">
+						<a
+							href="/blog/category/{category}/"
+							class="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+						>
 							{category}
 						</a>
 					</li>

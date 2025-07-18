@@ -12,17 +12,24 @@
 		"@sveltejs/adapter-static": "^3.0.0",
 		"@sveltejs/kit": "^2.5.27",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@tailwindcss/typography": "^0.5.16",
+		"autoprefixer": "^10.4.21",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.45.1",
 		"mdsvex": "^0.11.0",
+		"postcss": "^8.5.6",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.2.6",
 		"rehype-autolink-headings": "^6.1.1",
 		"rehype-slug": "^5.1.0",
 		"svelte": "^5.0.0",
 		"svelte-preprocess": "^6.0.0",
+		"tailwindcss": "^3.4.17",
 		"vite": "^5.4.4"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@lucide/svelte": "^0.525.0"
+	}
 }

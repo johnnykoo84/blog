@@ -1,7 +1,6 @@
 <script>
 	import { isMenuOpen } from '../assets/js/store';
-	import HamburgerSVG from './svg/HamburgerSVG.svelte';
-	import XSVG from './svg/XSVG.svelte';
+	import { Menu, X } from '@lucide/svelte';
 
 	/**
 	 * @typedef {Object} Props
@@ -19,13 +18,14 @@
 <button
 	onclick={toggleIsMenuOpen}
 	aria-pressed={$isMenuOpen}
-	class="menu-button"
+	class="p-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-700 dark:text-white hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-500 transition-all duration-200 flex items-center justify-center md:hidden"
 	tabindex={$isMenuOpen || !closeOnly ? '0' : '-1'}
 >
 	<span class="sr-only">Toggle hamburger menu</span>
 	{#if closeOnly}
-		<XSVG />
+		<X size={20} />
 	{:else}
-		<HamburgerSVG />
+		<Menu size={20} />
 	{/if}
 </button>
+
