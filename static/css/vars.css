@@ -1,24 +1,69 @@
 :root {
-	/* Colors */
-	--accent: #3b82f6;
-	--background: #faf9f8;
-	--lightAccent: #7fb3e3;
-	--lighterAccent: #e6e8e4;
-	--dark: #457b9d;
-	--darker: #1d3557;
-	--slate: #2f3948;
+	/* Light theme colors */
+	--accent: #8b5cf6;
+	--background: #ffffff;
+	--surface: #ffffff;
+	--lightAccent: #a78bfa;
+	--lighterAccent: #ede9fe;
+	--dark: #7c3aed;
+	--darker: #6d28d9;
+	--slate: #334155;
+	--text-primary: #1e293b;
+	--text-secondary: #475569;
+	--text-muted: #64748b;
+	--border: #d1d5db;
+	--border-light: #e5e7eb;
+	--shadow: rgba(0, 0, 0, 0.15);
 
-	--white: #fff;
-	--black: #152030;
+	--white: #ffffff;
+	--black: #000000;
 
-	--ink: var(--slate);
+	--ink: var(--text-primary);
 	--paper: var(--background);
 
-	/**
-	 * These fonts are broken out into two separate variables from a previous iteration. I left
-	 * it in because it's nice to be able to split out the heading and body fonts.
-	 */
-	--accentFont: 'Atkinson Hyperlegible', Georgia, Times, serif;
-	--primaryFont: 'Atkinson Hyperlegible', sans-serif;
-	--codeFont: 'Fira Code', monospace;
+	/* Fonts */
+	--accentFont: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--primaryFont: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--codeFont: 'Fira Code', 'Consolas', monospace;
+
+	/* Spacing */
+	--space-xs: 0.25rem;
+	--space-sm: 0.5rem;
+	--space-md: 1rem;
+	--space-lg: 1.5rem;
+	--space-xl: 2rem;
+	--space-2xl: 3rem;
+
+	/* Border radius */
+	--radius-sm: 0.375rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1rem;
+	--radius-full: 9999px;
+
+	/* Transitions */
+	--transition-fast: 150ms ease;
+	--transition-base: 250ms ease;
+	--transition-slow: 350ms ease;
+}
+
+/* Dark theme */
+[data-theme='dark'] {
+	--accent: #a78bfa;
+	--background: #0f172a;
+	--surface: #1e293b;
+	--lightAccent: #c4b5fd;
+	--lighterAccent: #7c3aed;
+	--dark: #ddd6fe;
+	--darker: #ede9fe;
+	--slate: #cbd5e1;
+	--text-primary: #f8fafc;
+	--text-secondary: #cbd5e1;
+	--text-muted: #94a3b8;
+	--border: #334155;
+	--border-light: #475569;
+	--shadow: rgba(0, 0, 0, 0.3);
+
+	--ink: var(--text-primary);
+	--paper: var(--background);
 }

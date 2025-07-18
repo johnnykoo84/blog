@@ -12,8 +12,10 @@
 	<meta data-key="description" name="description" content={siteDescription}>
 </svelte:head>
 
-<h1>Blog</h1>
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Blog</h1>
 
-<PostsList posts={data.posts} />
+	<PostsList posts={data.posts} />
 
-<Pagination currentPage={1} totalPosts={data.total} />
+	<Pagination currentPage={1} totalPosts={data.total} />
+</div>

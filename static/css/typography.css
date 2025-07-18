@@ -1,51 +1,71 @@
 body {
-	line-height: 1.5;
+	line-height: 1.6;
+	font-size: 1rem;
 }
 
 @media (min-width: 48rem) {
 	body {
 		font-size: 1.125rem;
-	}
-}
-
-@media (min-width: 80rem) {
-	body {
-		font-size: 1.25rem;
+		line-height: 1.7;
 	}
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
-	margin: 4.5rem 0 1rem;
-	line-height: 1.1;
+	margin: 3rem 0 1rem;
+	line-height: 1.2;
 	font-family: var(--accentFont);
-	font-weight: bold;
-	color: var(--darker);
+	font-weight: 700;
+	color: var(--text-primary);
 	text-wrap: balance;
+	letter-spacing: -0.02em;
+	transition: color var(--transition-base);
 }
 
 h1 {
-	font-size: clamp(2.5rem, calc(2.5rem + 1vw), 3.5rem);
-	margin: 0 0 2rem;
+	font-size: clamp(2rem, calc(2rem + 2vw), 3.5rem);
+	margin: 0 0 1.5rem;
 	position: relative;
 	overflow: hidden;
+	font-weight: 800;
 }
 
 h2 {
-	font-size: clamp(1.8rem, calc(1.8rem + 1vw), 2.5rem);
+	font-size: clamp(1.5rem, calc(1.5rem + 1vw), 2.25rem);
+	font-weight: 700;
 }
 
 h3 {
-	font-size: clamp(1.6rem, calc(1.6rem + 1vw), 2rem);
+	font-size: clamp(1.25rem, calc(1.25rem + 0.5vw), 1.75rem);
+	font-weight: 600;
 }
 
 h4 {
-	font-size: clamp(1.5rem, calc(1.5rem + 1vw), 1.8rem);
-	;
+	font-size: clamp(1.125rem, calc(1.125rem + 0.25vw), 1.5rem);
+	font-weight: 600;
 }
 
 h5 {
-	font-size: clamp(1.35rem, calc(1.35rem + 1vw), 1.5rem);
-	;
+	font-size: clamp(1rem, calc(1rem + 0.25vw), 1.25rem);
+	font-weight: 600;
+}
+
+/* Text color utilities */
+p,
+li,
+td,
+th,
+span {
+	color: var(--text-primary);
+}
+
+/* Secondary text */
+.text-secondary {
+	color: var(--text-secondary);
+}
+
+/* Muted text */
+.text-muted {
+	color: var(--text-muted);
 }
 
 h6 {
@@ -53,9 +73,28 @@ h6 {
 }
 
 a {
-	color: var(--darker);
+	color: var(--accent);
 	text-decoration-thickness: 1px;
+	text-decoration-color: var(--accent);
+	transition: color var(--transition-fast);
+}
+
+a:hover {
+	color: var(--dark);
 	text-decoration-color: var(--dark);
+}
+
+a:visited {
+	color: var(--darker);
+}
+
+[data-theme='dark'] a:hover {
+	color: var(--lightAccent);
+	text-decoration-color: var(--lightAccent);
+}
+
+[data-theme='dark'] a:visited {
+	color: var(--lighterAccent);
 }
 
 ul {

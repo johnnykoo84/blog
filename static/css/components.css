@@ -1,17 +1,19 @@
 .callout {
-	background: var(--lightAccent);
-	padding: 2rem 1rem;
-  width: calc(100% + 2rem);
+	background: var(--surface);
+	padding: 2rem;
+	width: 100%;
 	max-width: unset;
-  margin: 2rem 0 2rem -1rem;
+	margin: 2rem 0;
 	font-style: italic;
-	border-radius: 0.125rem;
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border);
+	border-left: 4px solid var(--accent);
+	transition: all var(--transition-base);
+}
 
-  @media (min-width: 48rem) {
-    width: calc(100% + 4rem);
-    margin: 2rem 0 2rem -2rem;
-    padding: 2rem;
-  }
+.callout:hover {
+	box-shadow: 0 4px 12px var(--shadow);
+	transform: translateY(-2px);
 }
 
 .pagination {
@@ -31,29 +33,47 @@
 		}
 
 		a {
-			background: var(--lightAccent);
+			background: var(--surface);
 			text-decoration: none;
 			line-height: 1;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 2em;
-			height: 2em;
+			width: 2.5em;
+			height: 2.5em;
 			font-family: var(--primaryFont);
-			font-weight: bold;
-			transition: background .1s;
+			font-weight: 500;
+			border-radius: var(--radius-md);
+			border: 1px solid var(--border);
+			transition: all var(--transition-fast);
 
 			&:hover {
 				background: var(--accent);
-				color: var(--background);
+				color: var(--white);
+				border-color: var(--accent);
+				transform: translateY(-2px);
+				box-shadow: 0 2px 8px var(--shadow);
 			}
 
-			&[aria-current="true"] {
+			&[aria-current='true'] {
 				background: var(--accent);
-				color: var(--background);
-				border: 1px solid currentColor;
+				color: var(--white);
+				border-color: var(--accent);
+				box-shadow: 0 2px 8px var(--shadow);
 			}
 		}
+	}
+}
 
+@media (max-width: 47.99rem) {
+	.pagination ul {
+		justify-content: center;
+		gap: 0.25rem;
+	}
+	
+	.pagination ul a {
+		width: 2em;
+		height: 2em;
+		font-size: 0.9rem;
 	}
 }
