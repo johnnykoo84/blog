@@ -33,7 +33,7 @@ const fetchPosts = async ({ offset = 0, limit = postsPerPage, category = '' } = 
 		coverImage: post.coverImage,
 		coverWidth: post.coverWidth,
 		coverHeight: post.coverHeight,
-		date: post.date,
+		date: post.date.toString(),
 		categories: post.categories
 	}));
 

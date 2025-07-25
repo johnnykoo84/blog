@@ -2,7 +2,7 @@
 <script>
 	import PostsList from '$lib/components/PostsList.svelte'
 	import Pagination from '$lib/components/Pagination.svelte'
-	import { siteDescription } from '$lib/config'
+	import { siteDescription, postsPerPage } from '$lib/config'
 
 	let { data } = $props();
   const { page, totalPosts, posts } = data
@@ -31,5 +31,5 @@
 
 	<p>Sorry, no posts to show here.</p>
 
-	<a href="/blog">Back to blog</a>
+	<a href="/">Back to blog</a>
 {/if}
