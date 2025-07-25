@@ -1,4 +1,4 @@
-<!-- Renders any page at /blog/category/* -->
+<!-- Renders any page at /category/* -->
 <script>
 	import PostsList from '$lib/components/PostsList.svelte'
 	import Pagination from '$lib/components/Pagination.svelte'
@@ -22,9 +22,9 @@
 
 {#if posts.length}
 	<PostsList posts={posts} />
-	<Pagination currentPage={page} totalPosts={total} path="/blog/category/{category}/page" />
+	<Pagination currentPage={page} totalPosts={total} path="/category/{category}/page" />
 {:else}
 	<p><strong>Ope!</strong> Sorry, couldn't find any posts in the category "{category}".</p>
 
-	<p><a href="/blog">Back to blog</a></p>
+	<p><a href="/">Back to blog</a></p>
 {/if}

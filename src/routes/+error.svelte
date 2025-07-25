@@ -4,7 +4,7 @@ import { page } from '$app/stores'
 </script>
 
 <h2>{$page.status}</h2>
-<p class="subhead">{$page.error.message}</p>
+<p class="subhead">{$page.error?.message || 'An error occurred'}</p>
 
 <p><strong>Sorry!</strong> Maybe try one of these links?</p>
 <ul>

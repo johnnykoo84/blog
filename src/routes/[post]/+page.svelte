@@ -55,7 +55,7 @@
 				{#each categories as category}
 					<li>
 						<a
-							href="/blog/category/{category}/"
+							href="/category/{category}/"
 							class="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
 						>
 							{category}

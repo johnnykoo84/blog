@@ -122,7 +122,6 @@ header {
 	border-color: var(--accent);
 }
 
-
 @media (max-width: 47.99rem) {
 	.menu-button {
 		padding: 0.5rem;
