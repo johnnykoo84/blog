@@ -2,6 +2,8 @@ import { redirect } from '@sveltejs/kit';
 import { postsPerPage } from '$lib/config';
 import fetchPosts from '$lib/assets/js/fetchPosts';
 
+export const prerender = false;
+
 export const load = async ({ url, params, fetch }) => {
 	const page = parseInt(params.page) || 1;
 	const { category } = params;
