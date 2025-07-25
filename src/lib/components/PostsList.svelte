@@ -16,7 +16,7 @@
 	{#each posts as post}
 		<li>
 			<article class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-purple-300 dark:hover:border-purple-600">
-				<a href="/blog/{post.slug}" class="block text-inherit no-underline">
+				<a href="/{post.slug}" class="block text-inherit no-underline">
 					{#if post.coverImage}
 						<div class="aspect-video overflow-hidden bg-purple-50 dark:bg-purple-900/20">
 							<img
