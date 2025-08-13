@@ -50,4 +50,18 @@
 	.btn-secondary {
 		@apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:bg-slate-600;
 	}
+
+	/* Inline code styling */
+	.prose :where(code):not(:where([class~="not-prose"] *))::before,
+	.prose :where(code):not(:where([class~="not-prose"] *))::after {
+		content: none;
+	}
+
+	.prose :where(code):not(:where([class~="not-prose"] *)) {
+		@apply bg-gray-100 dark:bg-slate-800 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded text-sm font-mono;
+	}
+
+	.prose :where(pre code):not(:where([class~="not-prose"] *)) {
+		@apply bg-transparent p-0 text-inherit;
+	}
 }
