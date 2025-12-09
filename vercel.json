@@ -1,4 +1,7 @@
 {
   "buildCommand": "pnpm build",
-  "outputDirectory": "build"
+  "outputDirectory": "build",
+  "installCommand": "pnpm install",
+  "framework": "sveltekit",
+  "nodeVersion": "22"
 }

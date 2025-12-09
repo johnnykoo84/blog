@@ -29,6 +29,10 @@
 		"vite": "^5.4.4"
 	},
 	"type": "module",
+	"engines": {
+		"node": ">=22.0.0",
+		"pnpm": ">=9.0.0"
+	},
 	"dependencies": {
 		"@lucide/svelte": "^0.525.0"
 	}
