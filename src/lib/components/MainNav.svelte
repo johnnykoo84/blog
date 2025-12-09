@@ -17,6 +17,6 @@
 </nav>
 
 <!-- Desktop navigation -->
-<nav class="hidden md:flex md:items-center md:space-x-8 md:flex-1 md:justify-center">
+<nav class="hidden md:flex md:items-center md:space-x-8 md:flex-1 md:justify-center md:pt-4 md:pb-4">
 	<NavItems />
 </nav>

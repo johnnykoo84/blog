@@ -9,7 +9,7 @@
 			<nav>
 				<ul class="space-y-2">
 					<li>
-						<a href="/" class="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Home</a>
+						<a href="/" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</a>
 					</li>
 				</ul>
 			</nav>

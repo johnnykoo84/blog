@@ -12,7 +12,7 @@
 </script>
 
 <button 
-  class="p-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-700 dark:text-white hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-500 transition-all duration-200 flex items-center justify-center group" 
+  class="p-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-700 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200 flex items-center justify-center group" 
   onclick={handleToggle}
   aria-label="Toggle {currentTheme === 'light' ? 'dark' : 'light'} mode"
   title="Toggle {currentTheme === 'light' ? 'dark' : 'light'} mode"

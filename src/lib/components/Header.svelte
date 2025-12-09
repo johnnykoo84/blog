@@ -20,7 +20,7 @@
 				Skip to main content
 			</a>
 			
-			<a href="/" class="text-xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors flex-shrink-0 truncate max-w-[calc(100vw-140px)] md:max-w-none">
+			<a href="/" class="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex-shrink-0 truncate max-w-[calc(100vw-140px)] md:max-w-none">
 				{siteTitle}
 			</a>
 			
