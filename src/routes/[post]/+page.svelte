@@ -1,10 +1,14 @@
 <!-- This file renders each individual blog post for reading. Be sure to update the svelte:head below -->
 <script>
+	import Comments from '$lib/components/Comments.svelte';
+	import { enableComments } from '$lib/config';
+
 	let { data } = $props();
 
-	const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories } =
+	const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories, slug } =
 		data.meta;
 	const { PostContent } = data;
+	const postId = slug;
 </script>
 
 <svelte:head>
@@ -64,5 +68,9 @@
 				{/each}
 			</ul>
 		</aside>
+	{/if}
+
+	{#if enableComments}
+		<Comments {postId} />
 	{/if}
 </article>
