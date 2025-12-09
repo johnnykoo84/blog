@@ -11,15 +11,16 @@
   }
 </script>
 
-<button 
-  class="p-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-700 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200 flex items-center justify-center group" 
+<button
+  class="p-2 flex items-center justify-center font-bold uppercase text-sm"
+  style="border: 3px dotted rgb(var(--border)); background-color: rgb(var(--accent)); color: rgb(var(--primary-foreground)); box-shadow: 3px 3px 0px rgba(0,0,0,0.3);"
   onclick={handleToggle}
   aria-label="Toggle {currentTheme === 'light' ? 'dark' : 'light'} mode"
   title="Toggle {currentTheme === 'light' ? 'dark' : 'light'} mode"
 >
   {#if currentTheme === 'light'}
-    <Moon size={20} strokeWidth={2} class="group-hover:rotate-12 transition-transform duration-300" />
+    <Moon size={20} strokeWidth={2} />
   {:else}
-    <Sun size={20} strokeWidth={2} class="group-hover:rotate-12 transition-transform duration-300" />
+    <Sun size={20} strokeWidth={2} />
   {/if}
 </button>

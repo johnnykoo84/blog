@@ -14,8 +14,9 @@
 	import { theme } from '$lib/stores/theme';
 	let { data, children } = $props();
 
-	const transitionIn = { delay: 150, duration: 150 };
-	const transitionOut = { duration: 100 };
+	// Instant transitions for 90s feel
+	const transitionIn = { delay: 0, duration: 0 };
+	const transitionOut = { duration: 0 };
 
 	/**
 	 * Updates the global store with the current path. (Used for highlighting
@@ -42,9 +43,11 @@
 </script>
 
 <svelte:head>
+	<!-- Retro Korean PC통신 fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
 	<link rel="stylesheet" href="/css/code.css" />
 	<link rel="stylesheet" href="/css/prism.css" />
 	<link
@@ -59,7 +62,7 @@
 	The below markup is used on every page in the site. The <slot> is where the page's
 	actual contents will show up.
 -->
-<div class="min-h-screen flex flex-col bg-white dark:bg-slate-900 transition-colors duration-300">
+<div class="min-h-screen flex flex-col" style="background-color: rgb(var(--background)); color: rgb(var(--foreground))">
 	<Header />
 	{#key data.path}
 		<main id="main" tabindex="-1" class="flex-1 max-w-4xl mx-auto px-4 py-8 md:py-16 w-full" in:fade|global={transitionIn} out:fade|global={transitionOut}>

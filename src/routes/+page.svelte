@@ -13,7 +13,7 @@
 </svelte:head>
 
 <div class="max-w-4xl mx-auto px-4 py-8">
-	<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Blog</h1>
+	<h1 class="text-xl font-bold font-mono mb-6" style="color: rgb(var(--foreground));">Blog</h1>
 
 	<PostsList posts={data.posts} />
 

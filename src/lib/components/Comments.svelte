@@ -36,27 +36,26 @@
 	});
 </script>
 
-<div class="mt-12">
-	<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-		Comments ({comments.length})
+<div class="mt-12" style="border-top: 1px solid rgb(var(--muted)); padding-top: 16px;">
+	<h2 class="font-mono text-base font-bold mb-4" style="color: rgb(var(--foreground));">
+		댓글 ({comments.length})
 	</h2>
 
-	<div class="space-y-8">
+	<div class="space-y-4">
 		<!-- Comment Form -->
-		<div class="bg-white dark:bg-slate-800 rounded-lg p-6 border border-gray-200 dark:border-slate-700">
-			<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Leave a Comment</h3>
+		<div class="p-3" style="border: 1px solid rgb(var(--muted));">
+			<h3 class="font-mono text-sm mb-3" style="color: rgb(var(--foreground));">댓글 작성</h3>
 			<CommentForm {postId} onCommentAdded={handleCommentAdded} />
 		</div>
 
 		<!-- Comments List -->
 		{#if isLoading}
-			<div class="text-center py-12">
-				<div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-				<p class="mt-4 text-gray-500 dark:text-gray-400">Loading comments...</p>
+			<div class="text-center py-8">
+				<p class="font-mono text-sm" style="color: rgb(var(--muted));">로딩중...</p>
 			</div>
 		{:else if error}
-			<div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-				<p class="text-sm text-red-600 dark:text-red-400">Error loading comments: {error}</p>
+			<div class="p-2 text-sm font-mono" style="color: rgb(255, 100, 100);">
+				{error}
 			</div>
 		{:else}
 			<CommentList {comments} />

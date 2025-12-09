@@ -4,22 +4,16 @@
 
 @layer base {
 	:root {
-		--primary: 139 92 246;
-		--primary-foreground: 255 255 255;
-		--background: 255 255 255;
-		--foreground: 15 23 42;
-		--muted: 100 116 139;
-		--border: 209 213 219;
-		--radius: 0.5rem;
-	}
-
-	.dark {
-		--primary: 139 92 246;
-		--primary-foreground: 255 255 255;
-		--background: 15 23 42;
-		--foreground: 248 250 252;
-		--muted: 148 163 184;
-		--border: 51 65 85;
+		/* HiTel Minimal - Blue and White Only */
+		--background: 0 0 128; /* Deep Blue #000080 */
+		--foreground: 255 255 255; /* White */
+		--primary: 255 255 255; /* White for highlights */
+		--primary-foreground: 0 0 128; /* Blue text on white */
+		--accent: 200 200 255; /* Light blue accent */
+		--muted: 150 150 200; /* Muted light blue */
+		--border: 255 255 255; /* White borders */
+		--link: 255 255 255; /* White links */
+		--link-visited: 200 200 255; /* Light blue visited */
 	}
 
 	* {
@@ -27,42 +21,91 @@
 	}
 
 	body {
-		background-color: hsl(var(--background));
-		color: hsl(var(--foreground));
-		font-feature-settings:
-			'rlig' 1,
-			'calt' 1;
-		transition:
-			background-color 0.3s ease,
-			color 0.3s ease;
+		background-color: rgb(var(--background));
+		color: rgb(var(--foreground));
+		font-family: 'Galmuri11', 'Courier New', 'Courier', monospace;
+		font-size: 14px;
+		line-height: 1.6;
+		transition: none;
+	}
+
+	/* Simple links */
+	a {
+		color: rgb(var(--link));
+		text-decoration: underline;
+	}
+
+	a:visited {
+		color: rgb(var(--link-visited));
+	}
+
+	a:hover {
+		text-decoration: none;
+	}
+
+	/* Simple headings */
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Galmuri11', 'Courier New', monospace;
+		font-weight: bold;
+		color: rgb(var(--foreground));
 	}
 }
 
 @layer components {
+	/* Minimal Button Styles */
 	.btn {
-		@apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+		@apply inline-flex items-center justify-center text-sm;
+		border: 1px solid rgb(var(--border));
+		padding: 4px 12px;
+		background: rgb(var(--background));
+		color: rgb(var(--foreground));
+		cursor: pointer;
+		transition: none;
+		font-family: 'Courier New', monospace;
+	}
+
+	.btn:hover {
+		background: rgb(var(--primary));
+		color: rgb(var(--primary-foreground));
 	}
 
 	.btn-primary {
-		@apply bg-purple-500 text-white hover:bg-purple-600;
+		background: transparent;
+		color: rgb(var(--foreground));
+		border: 1px solid rgb(var(--border));
 	}
 
 	.btn-secondary {
-		@apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:bg-slate-600;
+		background: transparent;
+		border: 1px solid rgb(var(--foreground));
+		color: rgb(var(--foreground));
 	}
 
-	/* Inline code styling */
+	/* Minimal Code Blocks */
 	.prose :where(code):not(:where([class~='not-prose'] *))::before,
 	.prose :where(code):not(:where([class~='not-prose'] *))::after {
 		content: none;
 	}
 
 	.prose :where(code):not(:where([class~='not-prose'] *)) {
-		@apply bg-gray-100 dark:bg-slate-800 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded text-sm font-mono;
+		background: rgba(255, 255, 255, 0.1);
+		color: rgb(var(--foreground));
+		padding: 2px 4px;
+		font-family: 'Courier New', monospace;
+		font-size: 0.9em;
 	}
 
 	.prose :where(pre code):not(:where([class~='not-prose'] *)) {
-		@apply bg-transparent p-0 text-inherit;
+		background: transparent;
+		padding: 0;
+		color: inherit;
+	}
+
+	.prose :where(pre):not(:where([class~='not-prose'] *)) {
+		background: rgba(0, 0, 0, 0.3);
+		color: rgb(var(--foreground));
+		border: 1px solid rgb(var(--border));
+		padding: 12px;
 	}
 
 	/* Cusdis Comment System Styling - Fix iframe */
@@ -85,24 +128,23 @@
 	}
 
 	#cusdis_thread label {
-		color: #374151 !important;
+		color: rgb(var(--foreground)) !important;
 		font-size: 0.875rem;
-		font-weight: 500;
-	}
-
-	.dark #cusdis_thread label {
-		color: #e5e7eb !important;
+		font-weight: 700;
+		font-family: 'Courier New', monospace !important;
+		text-transform: uppercase;
 	}
 
 	#cusdis_thread input[type='text'],
 	#cusdis_thread input[type='email'],
 	#cusdis_thread textarea {
-		background-color: white !important;
-		border: 1px solid #d1d5db !important;
-		border-radius: 0.375rem !important;
+		background-color: rgba(0, 0, 0, 0.3) !important;
+		border: 2px solid rgb(var(--border)) !important;
+		border-radius: 0 !important;
 		padding: 0.5rem 0.75rem !important;
 		font-size: 0.875rem !important;
-		color: #1f2937 !important;
+		font-family: 'Courier New', monospace !important;
+		color: rgb(var(--foreground)) !important;
 	}
 
 	#cusdis_thread textarea,
@@ -113,57 +155,34 @@
 		resize: vertical !important;
 	}
 
-	.dark #cusdis_thread input[type='text'],
-	.dark #cusdis_thread input[type='email'],
-	.dark #cusdis_thread textarea {
-		background-color: #1e293b !important;
-		border-color: #475569 !important;
-		color: #f1f5f9 !important;
-	}
-
 	#cusdis_thread input::placeholder,
 	#cusdis_thread textarea::placeholder {
-		color: #9ca3af !important;
-	}
-
-	.dark #cusdis_thread input::placeholder,
-	.dark #cusdis_thread textarea::placeholder {
-		color: #6b7280 !important;
+		color: rgb(var(--muted)) !important;
 	}
 
 	#cusdis_thread input:focus,
 	#cusdis_thread textarea:focus {
 		outline: none !important;
-		border-color: #2563eb !important;
-		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-	}
-
-	.dark #cusdis_thread input:focus,
-	.dark #cusdis_thread textarea:focus {
-		border-color: #60a5fa !important;
-		box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+		border-color: rgb(var(--primary)) !important;
+		box-shadow: none !important;
+		background-color: rgba(255, 255, 0, 0.1) !important;
 	}
 
 	#cusdis_thread button[type='submit'] {
-		background-color: #2563eb !important;
-		color: white !important;
-		border: none !important;
-		border-radius: 0.375rem !important;
+		background-color: rgb(var(--primary)) !important;
+		color: rgb(var(--primary-foreground)) !important;
+		border: 2px solid rgb(var(--border)) !important;
+		border-radius: 0 !important;
 		padding: 0.5rem 1.5rem !important;
-		font-weight: 500 !important;
+		font-weight: 700 !important;
 		font-size: 0.875rem !important;
+		font-family: 'Courier New', monospace !important;
+		text-transform: uppercase;
 		cursor: pointer;
 	}
 
 	#cusdis_thread button[type='submit']:hover {
-		background-color: #1d4ed8 !important;
-	}
-
-	.dark #cusdis_thread button[type='submit'] {
-		background-color: #3b82f6 !important;
-	}
-
-	.dark #cusdis_thread button[type='submit']:hover {
-		background-color: #2563eb !important;
+		background-color: rgb(var(--accent)) !important;
+		color: rgb(var(--background)) !important;
 	}
 }

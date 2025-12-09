@@ -20,24 +20,23 @@
 <!-- For some reason, the pagination wasn't re-rendering properly during navigation without the #key block -->
 {#key currentPage}
 	{#if pagesAvailable > 1}
-		<nav aria-label="Pagination navigation" class="mt-12">
+		<nav aria-label="Pagination" class="mt-8 pt-4" style="border-top: 1px solid rgb(var(--muted));">
 			<ul class="flex flex-wrap justify-center gap-2 list-none p-0 m-0">
 				{#each Array.from({length: pagesAvailable}, (_, i) => i + 1) as page}
 					<li>
-						<a 
-							href="{path}/{page}" 
+						<a
+							href="{path}/{page}"
 							aria-current="{isCurrentPage(page)}"
-							class="flex items-center justify-center w-10 h-10 text-sm font-medium rounded-lg transition-all duration-200 border
-								{isCurrentPage(page)
-									? 'bg-blue-600 text-white border-blue-600 shadow-lg'
-									: 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-600 hover:text-blue-600 dark:hover:text-blue-400'
-								}"
+							class="flex items-center justify-center w-8 h-8 text-sm font-mono"
+							style="{isCurrentPage(page)
+								? 'color: rgb(var(--foreground)); text-decoration: underline;'
+								: 'color: rgb(var(--muted)); text-decoration: none;'}"
 						>
 							<span class="sr-only">
 								{#if isCurrentPage(page)}
-									Current page: 
+									Current page:
 								{:else}
-									Go to page 
+									Go to page
 								{/if}
 							</span>
 							{page}
