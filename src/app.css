@@ -52,16 +52,118 @@
 	}
 
 	/* Inline code styling */
-	.prose :where(code):not(:where([class~="not-prose"] *))::before,
-	.prose :where(code):not(:where([class~="not-prose"] *))::after {
+	.prose :where(code):not(:where([class~='not-prose'] *))::before,
+	.prose :where(code):not(:where([class~='not-prose'] *))::after {
 		content: none;
 	}
 
-	.prose :where(code):not(:where([class~="not-prose"] *)) {
+	.prose :where(code):not(:where([class~='not-prose'] *)) {
 		@apply bg-gray-100 dark:bg-slate-800 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded text-sm font-mono;
 	}
 
-	.prose :where(pre code):not(:where([class~="not-prose"] *)) {
+	.prose :where(pre code):not(:where([class~='not-prose'] *)) {
 		@apply bg-transparent p-0 text-inherit;
+	}
+
+	/* Cusdis Comment System Styling - Fix iframe */
+	#cusdis_thread iframe {
+		width: 100% !important;
+		min-height: 330px !important;
+		height: auto !important;
+		display: block !important;
+		overflow: hidden !important;
+		border: none !important;
+	}
+
+	/* Remove overflow from containers */
+	#cusdis_thread,
+	.cusdis-wrapper,
+	#main > article > section > div {
+		height: auto !important;
+		max-height: none !important;
+		overflow: visible !important;
+	}
+
+	#cusdis_thread label {
+		color: #374151 !important;
+		font-size: 0.875rem;
+		font-weight: 500;
+	}
+
+	.dark #cusdis_thread label {
+		color: #e5e7eb !important;
+	}
+
+	#cusdis_thread input[type='text'],
+	#cusdis_thread input[type='email'],
+	#cusdis_thread textarea {
+		background-color: white !important;
+		border: 1px solid #d1d5db !important;
+		border-radius: 0.375rem !important;
+		padding: 0.5rem 0.75rem !important;
+		font-size: 0.875rem !important;
+		color: #1f2937 !important;
+	}
+
+	#cusdis_thread textarea,
+	div#cusdis_thread textarea,
+	#cusdis_thread > * textarea {
+		min-height: 120px !important;
+		height: 120px !important;
+		resize: vertical !important;
+	}
+
+	.dark #cusdis_thread input[type='text'],
+	.dark #cusdis_thread input[type='email'],
+	.dark #cusdis_thread textarea {
+		background-color: #1e293b !important;
+		border-color: #475569 !important;
+		color: #f1f5f9 !important;
+	}
+
+	#cusdis_thread input::placeholder,
+	#cusdis_thread textarea::placeholder {
+		color: #9ca3af !important;
+	}
+
+	.dark #cusdis_thread input::placeholder,
+	.dark #cusdis_thread textarea::placeholder {
+		color: #6b7280 !important;
+	}
+
+	#cusdis_thread input:focus,
+	#cusdis_thread textarea:focus {
+		outline: none !important;
+		border-color: #2563eb !important;
+		box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+	}
+
+	.dark #cusdis_thread input:focus,
+	.dark #cusdis_thread textarea:focus {
+		border-color: #60a5fa !important;
+		box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+	}
+
+	#cusdis_thread button[type='submit'] {
+		background-color: #2563eb !important;
+		color: white !important;
+		border: none !important;
+		border-radius: 0.375rem !important;
+		padding: 0.5rem 1.5rem !important;
+		font-weight: 500 !important;
+		font-size: 0.875rem !important;
+		cursor: pointer;
+	}
+
+	#cusdis_thread button[type='submit']:hover {
+		background-color: #1d4ed8 !important;
+	}
+
+	.dark #cusdis_thread button[type='submit'] {
+		background-color: #3b82f6 !important;
+	}
+
+	.dark #cusdis_thread button[type='submit']:hover {
+		background-color: #2563eb !important;
 	}
 }
