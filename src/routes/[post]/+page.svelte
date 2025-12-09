@@ -27,49 +27,30 @@
 </svelte:head>
 
 <article class="max-w-4xl mx-auto px-4 py-8">
-	<!-- You might want to add an alt frontmatter attribute. If not, leaving alt blank here works, too. -->
-	{#if coverImage}
-		<img
-			class="w-full h-auto rounded-lg shadow-lg mb-8"
-			src={coverImage}
-			alt=""
-			style="aspect-ratio: {coverWidth} / {coverHeight};"
-			width={coverWidth}
-			height={coverHeight}
-		/>
-	{/if}
+	<!-- Title -->
+	<h1 class="text-xl font-bold font-mono mb-3" style="color: rgb(var(--foreground));">{title}</h1>
 
-	<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{title}</h1>
-
-	<div class="text-sm text-gray-600 dark:text-gray-400 mb-8 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg">
-		<p><span class="font-semibold">Published:</span> {date}</p>
+	<!-- Meta Info -->
+	<div class="text-xs mb-6 font-mono pb-3" style="border-bottom: 1px solid rgb(var(--muted)); color: rgb(var(--muted));">
+		<span>{date}</span>
 		{#if updated}
-			<p><span class="font-semibold">Updated:</span> {updated}</p>
+			<span class="ml-3">Updated: {updated}</span>
+		{/if}
+		{#if categories && categories.length > 0}
+			<span class="ml-3">
+				{#each categories as category, i}
+					<a href="/category/{category}/" style="color: rgb(var(--accent));">{category}</a>{#if i < categories.length - 1}, {/if}
+				{/each}
+			</span>
 		{/if}
 	</div>
 
-	<div class="prose prose-lg max-w-none dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-gray-900 dark:prose-strong:text-white">
+	<!-- Post Content -->
+	<div class="prose prose-lg max-w-none font-mono" style="color: rgb(var(--foreground));">
 		<PostContent />
 	</div>
 
-	{#if categories}
-		<aside class="mt-12 p-6 bg-gray-50 dark:bg-slate-800 rounded-lg">
-			<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Posted in:</h2>
-			<ul class="flex flex-wrap gap-2">
-				{#each categories as category}
-					<li>
-						<a
-							href="/category/{category}/"
-							class="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-						>
-							{category}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</aside>
-	{/if}
-
+	<!-- Comments Section -->
 	{#if enableComments}
 		<Comments {postId} />
 	{/if}

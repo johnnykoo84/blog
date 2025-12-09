@@ -56,11 +56,11 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} class="space-y-4">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<form onsubmit={handleSubmit} class="space-y-3">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 		<div>
-			<label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-				Name <span class="text-red-500">*</span>
+			<label for="name" class="block text-xs mb-1 font-mono" style="color: rgb(var(--foreground));">
+				이름 *
 			</label>
 			<input
 				id="name"
@@ -68,64 +68,65 @@
 				bind:value={name}
 				required
 				maxlength="100"
-				placeholder="Your name"
+				placeholder="이름"
 				disabled={isSubmitting}
-				class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent disabled:opacity-50"
+				class="w-full px-2 py-1 text-sm font-mono"
+				style="border: 1px solid rgb(var(--border)); background-color: rgba(0, 0, 0, 0.2); color: rgb(var(--foreground));"
 			/>
 		</div>
 
 		<div>
-			<label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-				Email <span class="text-gray-400 text-xs">(optional)</span>
+			<label for="email" class="block text-xs mb-1 font-mono" style="color: rgb(var(--foreground));">
+				이메일
 			</label>
 			<input
 				id="email"
 				type="email"
 				bind:value={email}
 				maxlength="255"
-				placeholder="your@email.com"
+				placeholder="선택사항"
 				disabled={isSubmitting}
-				class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent disabled:opacity-50"
+				class="w-full px-2 py-1 text-sm font-mono"
+				style="border: 1px solid rgb(var(--border)); background-color: rgba(0, 0, 0, 0.2); color: rgb(var(--foreground));"
 			/>
 		</div>
 	</div>
 
 	<div>
-		<label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-			Comment <span class="text-red-500">*</span>
+		<label for="comment" class="block text-xs mb-1 font-mono" style="color: rgb(var(--foreground));">
+			댓글 *
 		</label>
 		<textarea
 			id="comment"
 			bind:value={comment}
 			required
 			maxlength="5000"
-			rows="5"
-			placeholder="Write your comment..."
+			rows="4"
+			placeholder="댓글을 입력하세요"
 			disabled={isSubmitting}
-			class="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent resize-vertical disabled:opacity-50"
+			class="w-full px-2 py-1 text-sm font-mono resize-vertical"
+			style="border: 1px solid rgb(var(--border)); background-color: rgba(0, 0, 0, 0.2); color: rgb(var(--foreground));"
 		></textarea>
-		<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-			{comment.length} / 5000 characters
-		</p>
 	</div>
 
 	{#if error}
-		<div class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-			<p class="text-sm text-red-600 dark:text-red-400">{error}</p>
+		<div class="p-2 text-sm font-mono" style="color: rgb(255, 100, 100);">
+			{error}
 		</div>
 	{/if}
 
 	{#if success}
-		<div class="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-			<p class="text-sm text-green-600 dark:text-green-400">Comment posted successfully!</p>
+		<div class="p-2 text-sm font-mono" style="color: rgb(var(--accent));">
+			댓글이 등록되었습니다
 		</div>
 	{/if}
 
 	<button
 		type="submit"
 		disabled={isSubmitting}
-		class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+		class="px-4 py-1 text-sm font-mono"
+		style="{isSubmitting ? 'border: 1px solid rgb(var(--muted)); background-color: transparent; color: rgb(var(--muted)); cursor: not-allowed;' : 'border: 1px solid rgb(var(--border)); background-color: transparent; color: rgb(var(--foreground)); cursor: pointer;'}"
 	>
-		{isSubmitting ? 'Posting...' : 'Post Comment'}
+		{isSubmitting ? '등록중...' : '등록'}
 	</button>
 </form>

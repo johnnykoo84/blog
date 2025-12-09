@@ -23,26 +23,22 @@
 </script>
 
 {#if comments.length === 0}
-	<div class="text-center py-12">
-		<p class="text-gray-500 dark:text-gray-400">No comments yet. Be the first to comment!</p>
+	<div class="text-center py-8">
+		<p class="font-mono text-sm" style="color: rgb(var(--muted));">아직 댓글이 없습니다</p>
 	</div>
 {:else}
-	<div class="space-y-6">
+	<div class="space-y-3">
 		{#each comments as comment (comment.id)}
-			<div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-6 border border-gray-200 dark:border-slate-700">
-				<div class="flex items-start justify-between mb-3">
-					<div>
-						<h4 class="font-semibold text-gray-900 dark:text-white">{comment.author_name}</h4>
-						<time class="text-sm text-gray-500 dark:text-gray-400" datetime={comment.created_at}>
-							{formatDate(comment.created_at)}
-						</time>
-					</div>
+			<div class="pb-3" style="border-bottom: 1px solid rgb(var(--muted));">
+				<div class="mb-1">
+					<span class="font-bold font-mono text-sm" style="color: rgb(var(--foreground));">{comment.author_name}</span>
+					<time class="text-xs font-mono ml-2" style="color: rgb(var(--muted));" datetime={comment.created_at}>
+						{formatDate(comment.created_at)}
+					</time>
 				</div>
-				<div class="prose prose-sm dark:prose-invert max-w-none">
-					<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words">
-						{comment.content}
-					</p>
-				</div>
+				<p class="text-sm font-mono whitespace-pre-wrap break-words leading-relaxed" style="color: rgb(var(--foreground));">
+					{comment.content}
+				</p>
 			</div>
 		{/each}
 	</div>
