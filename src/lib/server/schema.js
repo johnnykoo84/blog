@@ -9,6 +9,12 @@ import {
 	boolean
 } from 'drizzle-orm/pg-core';
 
+export const siteSettings = pgTable('site_settings', {
+	key: varchar('key', { length: 100 }).primaryKey(),
+	value: text('value').notNull(),
+	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()
+});
+
 export const comments = pgTable('comments', {
 	id: serial('id').primaryKey(),
 	postId: varchar('post_id', { length: 255 }).notNull(),

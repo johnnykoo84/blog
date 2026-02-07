@@ -14,9 +14,7 @@ const config = {
 			strict: false
 		}),
 		prerender: {
-			entries: [
-				'*'
-			]
+			entries: ['*']
 		}
 	},
 

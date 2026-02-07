@@ -5,7 +5,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
 
-const SYSTEM_BASE = `You are a proofreader for a Korean blog. Respect the author's voice and personal writing style. Do not rewrite sentences — only flag clear errors.
+const SYSTEM_BASE = `You are an editor for a Korean blog. Respect the author's voice and personal writing style.
 
 Return a JSON array of objects with this exact shape:
 [{ "original": "the erroneous text", "suggestion": "the corrected text", "reason": "brief explanation in Korean" }]
@@ -22,21 +22,30 @@ const LEVEL_INSTRUCTIONS = {
 - Typos and spelling errors (맞춤법)
 - Clearly wrong characters or missing spaces
 
-Do NOT touch grammar, style, phrasing, or word choice.`,
+Do NOT rewrite sentences. Do NOT touch grammar, style, phrasing, or word choice.`,
 
 	moderate: `Focus on:
 - Typos and spelling errors (맞춤법)
-- Clearly broken or awkward grammar (문법)
-- Unclear sentences that are hard to parse
+- Broken or awkward grammar (문법)
+- Unnatural phrasing or translated-sounding expressions (부자연스러운 표현)
+- Sentences that could flow more smoothly
 
-Do NOT suggest rewording for style or tone.`,
+Scope: sentence-level fixes. Do NOT restructure paragraphs or add new content.`,
 
-	max: `Focus on:
-- Typos and spelling errors (맞춤법)
-- Grammar fixes (문법)
-- Suggest better phrases or expressions where clearly improvable
+	max: `You are doing a full editorial review. Focus on:
+- Typos, spelling, grammar (맞춤법, 문법)
+- Unnatural phrasing and sentence flow
+- Content additions — suggest new sentences or paragraphs that would strengthen the post. Prefix "suggestion" with [추가].
+- Structural improvements — reorder sections, add subheadings, break up long paragraphs. Prefix "suggestion" with [구조].
+- Weak sections that could be removed. Prefix "suggestion" with [삭제 권장].
+- Stronger openings and closings
 
-Still respect the author's voice — suggest improvements, don't rewrite.`
+For structural suggestions ([구조], [추가], [삭제 권장]):
+- "original" should be the relevant passage from the text
+- "suggestion" should start with the tag, e.g. "[구조] 이 섹션을 두 단락으로 나누세요"
+- These are advisory — they describe what to change rather than providing replacement text
+
+Be thorough and give actionable feedback. The author wants real editorial help, not gentle nudges.`
 };
 
 export async function POST({ request, cookies }) {
@@ -57,7 +66,7 @@ export async function POST({ request, cookies }) {
 	try {
 		const message = await client.messages.create({
 			model: 'claude-sonnet-4-20250514',
-			max_tokens: 2048,
+			max_tokens: level === 'max' ? 4096 : 2048,
 			system: `${SYSTEM_BASE}\n\n${levelInstruction}`,
 			messages: [
 				{

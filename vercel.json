@@ -1,6 +1,6 @@
 {
-  "buildCommand": "bun run build",
-  "outputDirectory": "build",
-  "installCommand": "bun install",
-  "framework": "sveltekit"
+	"buildCommand": "bun run build",
+	"outputDirectory": "build",
+	"installCommand": "bun install",
+	"framework": "sveltekit"
 }

@@ -1,64 +1,39 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
+import { themes } from '$lib/themes.js';
 
 function createThemeStore() {
-	const { subscribe, set, update } = writable('light');
+	const { subscribe, set } = writable('hitel');
 
-	function applyTheme(theme) {
-		if (browser) {
-			document.documentElement.setAttribute('data-theme', theme);
-			if (theme === 'dark') {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
+	function apply(themeId) {
+		const palette = themes[themeId];
+		if (!palette || !browser) return;
+
+		const el = document.documentElement;
+		for (const [key, value] of Object.entries(palette.vars)) {
+			el.style.setProperty(`--${key}`, value);
 		}
-	}
-
-	function getSystemTheme() {
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		set(themeId);
 	}
 
 	return {
 		subscribe,
-		toggle: () =>
-			update((theme) => {
-				const newTheme = theme === 'light' ? 'dark' : 'light';
-				if (browser) {
-					localStorage.setItem('theme', newTheme);
-					applyTheme(newTheme);
-				}
-				return newTheme;
-			}),
-		init: () => {
-			if (browser) {
-				const stored = localStorage.getItem('theme');
-				const theme = stored || getSystemTheme();
-				set(theme);
-				applyTheme(theme);
-
-				// Listen for system theme changes when no preference is stored
-				const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-				const handleChange = (e) => {
-					if (!localStorage.getItem('theme')) {
-						const newTheme = e.matches ? 'dark' : 'light';
-						set(newTheme);
-						applyTheme(newTheme);
+		apply,
+		init: async () => {
+			if (!browser) return;
+			try {
+				const res = await fetch('/api/theme');
+				if (res.ok) {
+					const { theme: themeId } = await res.json();
+					if (themeId && themeId !== 'hitel') {
+						apply(themeId);
+					} else {
+						set('hitel');
 					}
-				};
-
-				mediaQuery.addEventListener('change', handleChange);
-
-				// Return cleanup function
-				return () => mediaQuery.removeEventListener('change', handleChange);
-			}
-		},
-		reset: () => {
-			if (browser) {
-				localStorage.removeItem('theme');
-				const systemTheme = getSystemTheme();
-				set(systemTheme);
-				applyTheme(systemTheme);
+				}
+			} catch {
+				// Fallback: HiTel is already the CSS default
+				set('hitel');
 			}
 		}
 	};

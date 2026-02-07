@@ -12,7 +12,14 @@ export const actions = {
 		const published = data.get('published') === 'on';
 
 		if (!title || !slug || !content) {
-			return fail(400, { error: 'Title, slug, and content are required', title, slug, content, excerpt, categories: categoriesRaw });
+			return fail(400, {
+				error: 'Title, slug, and content are required',
+				title,
+				slug,
+				content,
+				excerpt,
+				categories: categoriesRaw
+			});
 		}
 
 		const categories = JSON.stringify(
@@ -29,7 +36,14 @@ export const actions = {
 			`;
 		} catch (error) {
 			if (error.message?.includes('unique')) {
-				return fail(400, { error: 'A post with this slug already exists', title, slug, content, excerpt, categories: categoriesRaw });
+				return fail(400, {
+					error: 'A post with this slug already exists',
+					title,
+					slug,
+					content,
+					excerpt,
+					categories: categoriesRaw
+				});
 			}
 			throw error;
 		}
