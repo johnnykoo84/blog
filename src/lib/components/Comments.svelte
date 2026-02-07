@@ -12,11 +12,12 @@
 	async function fetchComments() {
 		try {
 			const response = await fetch(`/api/comments/${postId}`);
-			const data = await response.json();
 
 			if (!response.ok) {
-				throw new Error(data.error || 'Failed to fetch comments');
+				throw new Error('Failed to fetch comments');
 			}
+
+			const data = await response.json();
 
 			comments = data.comments || [];
 		} catch (err) {
