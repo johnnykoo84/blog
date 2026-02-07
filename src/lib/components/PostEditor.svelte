@@ -1,10 +1,12 @@
 <script>
 	import { marked } from 'marked';
+	import { SpellCheck, X, LoaderCircle, ChevronDown } from '@lucide/svelte';
 
 	let { post = {}, form = null } = $props();
 
 	let activeTab = $state('write');
 	let title = $state(post.title ?? form?.title ?? '');
+	const isNew = !post.slug;
 	let slug = $state(post.slug ?? form?.slug ?? '');
 	let categories = $state(post.categories ?? form?.categories ?? '');
 	let excerpt = $state(post.excerpt ?? form?.excerpt ?? '');
@@ -13,13 +15,76 @@
 
 	let previewHtml = $derived(marked(content || ''));
 
+	// AI review state
+	let reviewLevel = $state('minimal');
+	let reviewing = $state(false);
+	let suggestions = $state([]);
+	let reviewError = $state('');
+	let levelDropdownOpen = $state(false);
+
+	const levels = {
+		minimal: { label: 'Minimal', desc: 'Typos & spelling only' },
+		moderate: { label: 'Moderate', desc: 'Typos + grammar' },
+		max: { label: 'Max', desc: 'Typos + grammar + phrasing' }
+	};
+
+	function getDatePrefix() {
+		const now = new Date();
+		const yy = String(now.getFullYear()).slice(2);
+		const mm = String(now.getMonth() + 1).padStart(2, '0');
+		const dd = String(now.getDate()).padStart(2, '0');
+		return `${yy}${mm}${dd}`;
+	}
+
 	function generateSlug() {
-		slug = title
+		const base = title
 			.toLowerCase()
 			.replace(/[^a-z0-9가-힣\s-]/g, '')
 			.replace(/\s+/g, '-')
 			.replace(/-+/g, '-')
 			.replace(/^-|-$/g, '');
+
+		if (isNew) {
+			slug = base ? `${getDatePrefix()}-${base}` : getDatePrefix();
+		} else {
+			slug = base;
+		}
+	}
+
+	async function runReview() {
+		if (!content.trim() || reviewing) return;
+
+		reviewing = true;
+		reviewError = '';
+		suggestions = [];
+
+		try {
+			const res = await fetch('/api/ai/review', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ content, level: reviewLevel })
+			});
+
+			if (!res.ok) {
+				const data = await res.json();
+				throw new Error(data.error || `HTTP ${res.status}`);
+			}
+
+			const data = await res.json();
+			suggestions = data.suggestions ?? [];
+		} catch (err) {
+			reviewError = err.message;
+		} finally {
+			reviewing = false;
+		}
+	}
+
+	function dismissSuggestion(index) {
+		suggestions = suggestions.filter((_, i) => i !== index);
+	}
+
+	function dismissAll() {
+		suggestions = [];
 	}
 </script>
 
@@ -84,9 +149,9 @@
 			</div>
 		</div>
 
-		<!-- GitHub-style tabs -->
+		<!-- GitHub-style tabs + Check button -->
 		<div>
-			<div class="flex border-b border-white">
+			<div class="flex items-center border-b border-white">
 				<button
 					type="button"
 					onclick={() => (activeTab = 'write')}
@@ -105,6 +170,60 @@
 				>
 					Preview
 				</button>
+
+				<!-- AI Check controls -->
+				<div class="ml-auto flex items-center gap-1 pb-1">
+					<!-- Level dropdown -->
+					<div class="relative">
+						<button
+							type="button"
+							onclick={() => (levelDropdownOpen = !levelDropdownOpen)}
+							class="flex items-center gap-1 px-2 py-1 text-xs border border-white/30 hover:border-white/60 transition-colors"
+						>
+							{levels[reviewLevel].label}
+							<ChevronDown size={12} />
+						</button>
+						{#if levelDropdownOpen}
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<div
+								class="absolute right-0 top-full mt-1 z-10 border border-white bg-black min-w-[180px]"
+								onmouseleave={() => (levelDropdownOpen = false)}
+							>
+								{#each Object.entries(levels) as [key, { label, desc }]}
+									<button
+										type="button"
+										onclick={() => {
+											reviewLevel = key;
+											levelDropdownOpen = false;
+										}}
+										class="block w-full text-left px-3 py-2 text-xs hover:bg-white/10 {reviewLevel === key
+											? 'bg-white/10'
+											: ''}"
+									>
+										<span class="font-bold">{label}</span>
+										<span class="opacity-60 ml-1">— {desc}</span>
+									</button>
+								{/each}
+							</div>
+						{/if}
+					</div>
+
+					<!-- Check button -->
+					<button
+						type="button"
+						onclick={runReview}
+						disabled={reviewing || !content.trim()}
+						class="flex items-center gap-1.5 px-3 py-1 text-xs border border-white/30 hover:border-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+					>
+						{#if reviewing}
+							<LoaderCircle size={14} class="animate-spin" />
+							Checking...
+						{:else}
+							<SpellCheck size={14} />
+							Check
+						{/if}
+					</button>
+				</div>
 			</div>
 
 			{#if activeTab === 'write'}
@@ -131,6 +250,53 @@
 				<input type="hidden" name="content" value={content} />
 			{/if}
 		</div>
+
+		<!-- AI Suggestions panel -->
+		{#if reviewError}
+			<div class="border border-red-400/50 bg-red-400/10 px-4 py-3 text-sm">
+				<p class="text-red-400">Review failed: {reviewError}</p>
+			</div>
+		{/if}
+
+		{#if suggestions.length > 0}
+			<div class="border border-white/30 bg-white/5">
+				<div class="flex items-center justify-between px-4 py-2 border-b border-white/20">
+					<span class="text-xs opacity-70">
+						{suggestions.length} suggestion{suggestions.length !== 1 ? 's' : ''} found
+					</span>
+					<button
+						type="button"
+						onclick={dismissAll}
+						class="text-xs opacity-50 hover:opacity-100 transition-opacity"
+					>
+						Dismiss all
+					</button>
+				</div>
+				<ul class="divide-y divide-white/10">
+					{#each suggestions as { original, suggestion, reason }, i}
+						<li class="flex items-start gap-3 px-4 py-3 text-sm">
+							<div class="flex-1 min-w-0">
+								<div class="font-mono text-xs">
+									<span class="line-through opacity-50">{original}</span>
+									<span class="mx-1 opacity-30">&rarr;</span>
+									<span class="text-green-400">{suggestion}</span>
+								</div>
+								{#if reason}
+									<p class="text-xs opacity-50 mt-1">{reason}</p>
+								{/if}
+							</div>
+							<button
+								type="button"
+								onclick={() => dismissSuggestion(i)}
+								class="opacity-30 hover:opacity-100 transition-opacity shrink-0 mt-0.5"
+							>
+								<X size={14} />
+							</button>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 
 		<div class="flex items-center justify-between">
 			<label class="flex items-center gap-2 text-sm cursor-pointer">
