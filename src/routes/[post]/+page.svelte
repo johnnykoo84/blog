@@ -1,7 +1,11 @@
 <!-- This file renders each individual blog post for reading. Be sure to update the svelte:head below -->
 <script>
 	import Comments from '$lib/components/Comments.svelte';
+	import ViewCount from '$lib/components/ViewCount.svelte';
+	import LikeDislike from '$lib/components/LikeDislike.svelte';
+	import ShareButtons from '$lib/components/ShareButtons.svelte';
 	import { enableComments } from '$lib/config';
+	import { siteLink } from '$lib/config';
 
 	let { data } = $props();
 
@@ -9,21 +13,25 @@
 		data.meta;
 	const { PostContent } = data;
 	const postId = slug;
+	const pageUrl = `${siteLink}/${slug}`;
+	const ogImageUrl = `${siteLink}/api/og/${slug}?title=${encodeURIComponent(title)}`;
 </script>
 
 <svelte:head>
-	<!-- Be sure to add your image files and un-comment the lines below -->
 	<title>{title}</title>
 	<meta data-key="description" name="description" content={excerpt} />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content={title} />
-	<meta name="twitter:title" content={title} />
 	<meta property="og:description" content={excerpt} />
+	<meta property="og:image" content={ogImageUrl} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:url" content={pageUrl} />
+	<meta property="og:site_name" content="bloKoo" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={excerpt} />
-	<!-- <meta property="og:image" content="https://yourdomain.com/image_path" /> -->
-	<meta property="og:image:width" content={coverWidth} />
-	<meta property="og:image:height" content={coverHeight} />
-	<!-- <meta name="twitter:image" content="https://yourdomain.com/image_path" /> -->
+	<meta name="twitter:image" content={ogImageUrl} />
 </svelte:head>
 
 <article class="max-w-4xl mx-auto px-4 py-8">
@@ -43,11 +51,22 @@
 				{/each}
 			</span>
 		{/if}
+		<span class="ml-3">
+			<ViewCount {postId} />
+		</span>
 	</div>
 
 	<!-- Post Content -->
 	<div class="prose prose-lg max-w-none font-mono" style="color: rgb(var(--foreground));">
 		<PostContent />
+	</div>
+
+	<!-- Engagement Bar -->
+	<div class="mt-8 py-4 font-mono" style="border-top: 1px solid rgb(var(--muted));">
+		<div class="flex flex-wrap items-center justify-between gap-4">
+			<LikeDislike {postId} />
+			<ShareButtons {title} url={pageUrl} />
+		</div>
 	</div>
 
 	<!-- Comments Section -->

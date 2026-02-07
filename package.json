@@ -6,7 +6,11 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"lint": "prettier --ignore-path .gitignore --check -- plugin-search-dir=. . && eslint --ignore-path .gitignore .",
-		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.0",
@@ -15,6 +19,8 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@tailwindcss/typography": "^0.5.16",
 		"autoprefixer": "^10.4.21",
+		"dotenv": "^17.2.4",
+		"drizzle-kit": "^0.31.8",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.45.1",
@@ -36,6 +42,9 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.525.0",
-		"@neondatabase/serverless": "^1.0.2"
+		"@neondatabase/serverless": "^1.0.2",
+		"@resvg/resvg-js": "^2.6.2",
+		"drizzle-orm": "^0.45.1",
+		"satori": "^0.19.1"
 	}
 }
