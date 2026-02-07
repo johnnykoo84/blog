@@ -5,6 +5,27 @@
 		<link rel="icon" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
+		<script>
+			// Blocking script: apply cached theme before first paint to prevent FOUC
+			(function() {
+				try {
+					var t = localStorage.getItem('site-theme');
+					if (!t || t === 'hitel') return;
+					var m = {
+						terminal:  { background:'0 0 0', foreground:'0 255 65', primary:'0 255 65', 'primary-foreground':'0 0 0', accent:'0 200 50', muted:'0 150 40', border:'0 255 65', link:'0 255 65', 'link-visited':'0 200 50' },
+						amber:     { background:'20 15 0', foreground:'255 176 0', primary:'255 176 0', 'primary-foreground':'20 15 0', accent:'255 200 60', muted:'180 120 0', border:'255 176 0', link:'255 200 60', 'link-visited':'200 140 0' },
+						dos:       { background:'0 0 0', foreground:'192 192 192', primary:'255 255 255', 'primary-foreground':'0 0 0', accent:'170 170 170', muted:'128 128 128', border:'192 192 192', link:'255 255 255', 'link-visited':'170 170 170' },
+						chollian:  { background:'0 80 80', foreground:'255 255 0', primary:'255 255 0', 'primary-foreground':'0 80 80', accent:'255 255 150', muted:'180 180 0', border:'255 255 0', link:'255 255 150', 'link-visited':'200 200 0' },
+						ghostty:   { background:'41 44 51', foreground:'255 255 255', primary:'136 161 187', 'primary-foreground':'41 44 51', accent:'233 200 128', muted:'160 160 180', border:'80 85 95', link:'136 161 187', 'link-visited':'183 189 115' }
+					};
+					var v = m[t];
+					if (!v) return;
+					var s = document.documentElement.style;
+					for (var k in v) s.setProperty('--' + k, v[k]);
+				} catch(e) {}
+			})();
+		</script>
+
 		%sveltekit.head%
 		<!-- You can add global <meta> tags here, but anything not global or dynamic should be a `<svelte:head>` tag on the proper page(s) instead. -->
 	</head>

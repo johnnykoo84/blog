@@ -14,6 +14,7 @@ function createThemeStore() {
 			el.style.setProperty(`--${key}`, value);
 		}
 		set(themeId);
+		try { localStorage.setItem('site-theme', themeId); } catch {}
 	}
 
 	return {
@@ -29,6 +30,7 @@ function createThemeStore() {
 						apply(themeId);
 					} else {
 						set('hitel');
+						try { localStorage.setItem('site-theme', 'hitel'); } catch {}
 					}
 				}
 			} catch {
