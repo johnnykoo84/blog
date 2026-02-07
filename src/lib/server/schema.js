@@ -1,4 +1,13 @@
-import { pgTable, serial, varchar, integer, text, timestamp, index } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	varchar,
+	integer,
+	text,
+	timestamp,
+	index,
+	boolean
+} from 'drizzle-orm/pg-core';
 
 export const comments = pgTable('comments', {
 	id: serial('id').primaryKey(),
@@ -34,4 +43,31 @@ export const postReactions = pgTable('post_reactions', {
 	postId: varchar('post_id', { length: 255 }).notNull().unique(),
 	likes: integer('likes').notNull().default(0),
 	dislikes: integer('dislikes').notNull().default(0)
+});
+
+export const users = pgTable('users', {
+	id: serial('id').primaryKey(),
+	email: varchar('email', { length: 255 }).notNull().unique(),
+	passwordHash: text('password_hash').notNull(),
+	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow()
+});
+
+export const sessions = pgTable('sessions', {
+	id: text('id').primaryKey(),
+	userId: integer('user_id')
+		.notNull()
+		.references(() => users.id),
+	expiresAt: timestamp('expires_at', { withTimezone: true }).notNull()
+});
+
+export const posts = pgTable('posts', {
+	id: serial('id').primaryKey(),
+	slug: varchar('slug', { length: 255 }).notNull().unique(),
+	title: varchar('title', { length: 500 }).notNull(),
+	content: text('content').notNull(),
+	excerpt: text('excerpt'),
+	categories: text('categories').notNull().default('[]'),
+	published: boolean('published').default(false),
+	createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+	updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()
 });

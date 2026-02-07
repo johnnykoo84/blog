@@ -24,6 +24,7 @@
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.45.1",
+		"gray-matter": "^4.0.3",
 		"mdsvex": "^0.11.0",
 		"postcss": "^8.5.6",
 		"prettier": "^3.1.1",
@@ -43,7 +44,9 @@
 		"@lucide/svelte": "^0.525.0",
 		"@neondatabase/serverless": "^1.0.2",
 		"@resvg/resvg-js": "^2.6.2",
+		"bcryptjs": "^3.0.3",
 		"drizzle-orm": "^0.45.1",
+		"marked": "^17.0.1",
 		"satori": "^0.19.1"
 	}
 }

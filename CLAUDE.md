@@ -8,22 +8,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Install dependencies
-pnpm install
+bun install
 
 # Run development server (http://localhost:5173)
-pnpm dev
+bun dev
 
 # Build for production
-pnpm build
+bun run build
 
 # Preview production build
-pnpm preview
+bun run preview
 
 # Format code
-pnpm format
+bun run format
 
 # Run linter
-pnpm lint
+bun run lint
 ```
 
 ## Architecture Overview

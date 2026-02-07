@@ -11,7 +11,9 @@
 
 	const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories, slug } =
 		data.meta;
-	const { PostContent } = data;
+	const PostContent = data.PostContent;
+	const htmlContent = data.htmlContent;
+	const isDbPost = data.source === 'db';
 	const postId = slug;
 	const pageUrl = `${siteLink}/${slug}`;
 	const ogImageUrl = `${siteLink}/api/og/${slug}?title=${encodeURIComponent(title)}`;
@@ -58,7 +60,11 @@
 
 	<!-- Post Content -->
 	<div class="prose prose-lg max-w-none font-mono" style="color: rgb(var(--foreground));">
-		<PostContent />
+		{#if isDbPost}
+			{@html htmlContent}
+		{:else}
+			<PostContent />
+		{/if}
 	</div>
 
 	<!-- Engagement Bar -->

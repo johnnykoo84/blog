@@ -1,4 +1,21 @@
 import { neon } from '@neondatabase/serverless';
-import { DATABASE_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
-export const sql = neon(DATABASE_URL);
+let _sql;
+
+export function getSql() {
+	if (!_sql) {
+		_sql = neon(env.DATABASE_URL);
+	}
+	return _sql;
+}
+
+// Proxy that lazily initializes the neon connection
+export const sql = new Proxy(function () {}, {
+	apply(_, __, args) {
+		return getSql()(...args);
+	},
+	get(_, prop) {
+		return getSql()[prop];
+	}
+});
