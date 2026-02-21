@@ -3,15 +3,17 @@ import { sql } from '$lib/server/db.js';
 
 export const GET = async () => {
 	const mdPosts = import.meta.glob(`$lib/posts/*.md`);
-	const mdCount = Object.keys(mdPosts).length;
+	const mdSlugs = Object.keys(mdPosts).map((path) => path.split('/').pop().slice(0, -3));
 
-	let dbCount = 0;
+	let dbSlugs = new Set();
 	try {
-		const rows = await sql`SELECT COUNT(*) as count FROM posts WHERE published = true`;
-		dbCount = parseInt(rows[0].count, 10);
+		const rows = await sql`SELECT slug FROM posts WHERE published = true`;
+		dbSlugs = new Set(rows.map((r) => r.slug));
 	} catch {
-		// DB not available (e.g. during prerender)
+		// DB not available
 	}
 
-	return json(mdCount + dbCount);
+	// Count: published DB posts + MD posts that don't overlap with DB
+	const uniqueMdCount = mdSlugs.filter((s) => !dbSlugs.has(s)).length;
+	return json(uniqueMdCount + dbSlugs.size);
 };

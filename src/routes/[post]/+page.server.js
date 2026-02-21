@@ -1,8 +1,6 @@
 import { sql } from '$lib/server/db.js';
 import { marked } from 'marked';
 
-export const prerender = false;
-
 export async function load({ params }) {
 	// Try DB first
 	try {
