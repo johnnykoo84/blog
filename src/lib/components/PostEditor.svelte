@@ -1,6 +1,7 @@
 <script>
 	import { marked } from 'marked';
-	import { SpellCheck, X, LoaderCircle, ChevronDown, Check } from '@lucide/svelte';
+	import { SpellCheck, X, LoaderCircle, ChevronDown, Check, Sparkles, Square } from '@lucide/svelte';
+	import { computeDiff, collapseDiff } from '$lib/utils/diff.js';
 
 	let { post = {}, form = null } = $props();
 
@@ -24,6 +25,45 @@
 
 	// Textarea ref for scroll-to-text
 	let textareaEl = $state(null);
+
+	// AI prompt state
+	let promptText = $state('');
+	let prompting = $state(false);
+	let promptError = $state('');
+	let diffResult = $state(null);
+	let proposedContent = $state('');
+	let originalBeforeDiff = $state('');
+
+	let showDiff = $derived(diffResult !== null);
+	let promptMode = $derived(content.trim() ? 'edit' : 'generate');
+
+	// Abort controllers for cancelling in-flight requests
+	let reviewAbort = $state(null);
+	let promptAbort = $state(null);
+
+	// Form validation
+	let errors = $state({});
+
+	function validateForm() {
+		const e = {};
+		if (!title.trim()) e.title = 'Title is required';
+		if (!slug.trim()) e.slug = 'Slug is required';
+		if (!content.trim()) e.content = 'Content is required';
+		errors = e;
+		return Object.keys(e).length === 0;
+	}
+
+	function handleSubmit(event) {
+		if (!validateForm()) {
+			event.preventDefault();
+		}
+	}
+
+	function clearError(field) {
+		if (errors[field]) {
+			errors = { ...errors, [field]: undefined };
+		}
+	}
 
 	const levels = {
 		minimal: { label: 'Minimal', desc: 'Typos & spelling only' },
@@ -68,6 +108,8 @@
 	async function runReview() {
 		if (!content.trim() || reviewing) return;
 
+		const abort = new AbortController();
+		reviewAbort = abort;
 		reviewing = true;
 		reviewError = '';
 		suggestions = [];
@@ -76,7 +118,8 @@
 			const res = await fetch('/api/ai/review', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ content, level: reviewLevel })
+				body: JSON.stringify({ content, level: reviewLevel }),
+				signal: abort.signal
 			});
 
 			if (!res.ok) {
@@ -87,10 +130,15 @@
 			const data = await res.json();
 			suggestions = (data.suggestions ?? []).map((s) => ({ ...s, stale: false }));
 		} catch (err) {
-			reviewError = err.message;
+			if (err.name !== 'AbortError') reviewError = err.message;
 		} finally {
 			reviewing = false;
+			reviewAbort = null;
 		}
+	}
+
+	function stopReview() {
+		reviewAbort?.abort();
 	}
 
 	function applySuggestion(index) {
@@ -162,7 +210,76 @@
 	let applicableCount = $derived(
 		suggestions.filter((s) => !s.stale && !isStructural(s.suggestion)).length
 	);
+
+	// --- AI Prompt functions ---
+	async function runPrompt() {
+		if (!promptText.trim() || prompting || showDiff) return;
+
+		const abort = new AbortController();
+		promptAbort = abort;
+		prompting = true;
+		promptError = '';
+
+		try {
+			const res = await fetch('/api/ai/prompt', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ content, prompt: promptText, title }),
+				signal: abort.signal
+			});
+
+			if (!res.ok) {
+				const data = await res.json();
+				throw new Error(data.error || `HTTP ${res.status}`);
+			}
+
+			const data = await res.json();
+			const newContent = data.result;
+
+			originalBeforeDiff = content;
+			proposedContent = newContent;
+
+			const oldText = content || '';
+			const rawDiff = computeDiff(oldText, newContent);
+			diffResult = collapseDiff(rawDiff);
+		} catch (err) {
+			if (err.name !== 'AbortError') promptError = err.message;
+		} finally {
+			prompting = false;
+			promptAbort = null;
+		}
+	}
+
+	function stopPrompt() {
+		promptAbort?.abort();
+	}
+
+	function acceptDiff() {
+		content = proposedContent;
+		diffResult = null;
+		proposedContent = '';
+		originalBeforeDiff = '';
+		promptText = '';
+		// Mark existing suggestions stale since content changed
+		suggestions = suggestions.map((s) => ({ ...s, stale: true }));
+	}
+
+	function rejectDiff() {
+		diffResult = null;
+		proposedContent = '';
+		originalBeforeDiff = '';
+		// Keep promptText so user can refine
+	}
+
+	function handleKeydown(e) {
+		if (e.key === 'Escape' && showDiff) {
+			e.preventDefault();
+			rejectDiff();
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <div class="{suggestions.length > 0 ? 'max-w-6xl' : 'max-w-4xl'} mx-auto px-4 py-8">
 	<div class="flex items-center justify-between mb-6">
@@ -174,7 +291,7 @@
 		<p class="text-red-400 text-sm mb-4">{form.error}</p>
 	{/if}
 
-	<form method="POST" class="space-y-4">
+	<form method="POST" class="space-y-4" novalidate onsubmit={handleSubmit}>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			<div>
 				<label for="title" class="block text-sm mb-1">Title</label>
@@ -183,10 +300,10 @@
 					id="title"
 					name="title"
 					bind:value={title}
-					oninput={generateSlug}
-					required
-					class="w-full bg-transparent border border-white px-3 py-2 text-sm font-mono focus:outline-none focus:bg-white/10"
+					oninput={() => { generateSlug(); clearError('title'); }}
+					class="w-full bg-transparent border px-3 py-2 text-sm font-mono focus:outline-none focus:bg-white/10 {errors.title ? 'border-red-400' : 'border-white'}"
 				/>
+				{#if errors.title}<p class="text-red-400 text-xs mt-1">{errors.title}</p>{/if}
 			</div>
 			<div>
 				<label for="slug" class="block text-sm mb-1">Slug</label>
@@ -195,9 +312,10 @@
 					id="slug"
 					name="slug"
 					bind:value={slug}
-					required
-					class="w-full bg-transparent border border-white px-3 py-2 text-sm font-mono focus:outline-none focus:bg-white/10"
+					oninput={() => clearError('slug')}
+					class="w-full bg-transparent border px-3 py-2 text-sm font-mono focus:outline-none focus:bg-white/10 {errors.slug ? 'border-red-400' : 'border-white'}"
 				/>
+				{#if errors.slug}<p class="text-red-400 text-xs mt-1">{errors.slug}</p>{/if}
 			</div>
 		</div>
 
@@ -284,17 +402,23 @@
 						{/if}
 					</div>
 
-					<!-- Check button with count badge -->
-					<button
-						type="button"
-						onclick={runReview}
-						disabled={reviewing || !content.trim()}
-						class="flex items-center gap-1.5 px-3 py-1 text-xs border border-white/30 hover:border-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-					>
-						{#if reviewing}
-							<LoaderCircle size={14} class="animate-spin" />
-							Checking...
-						{:else}
+					<!-- Check / Stop button -->
+					{#if reviewing}
+						<button
+							type="button"
+							onclick={stopReview}
+							class="flex items-center gap-1.5 px-3 py-1 text-xs border border-red-400/50 text-red-400 hover:bg-red-400/10 transition-colors"
+						>
+							<Square size={12} class="fill-current" />
+							Stop
+						</button>
+					{:else}
+						<button
+							type="button"
+							onclick={runReview}
+							disabled={!content.trim() || showDiff}
+							class="flex items-center gap-1.5 px-3 py-1 text-xs border border-white/30 hover:border-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+						>
 							<SpellCheck size={14} />
 							Check
 							{#if suggestions.length > 0}
@@ -302,26 +426,109 @@
 									{suggestions.length}
 								</span>
 							{/if}
-						{/if}
-					</button>
+						</button>
+					{/if}
 				</div>
 			</div>
 
+			<!-- AI Prompt bar -->
+			<div class="flex gap-2 border border-white/30 border-t-0 px-3 py-2 bg-white/5">
+				<div class="flex items-start gap-2 pt-1 shrink-0">
+					<Sparkles size={14} class="opacity-60" />
+					<span class="text-xs opacity-50">AI:</span>
+				</div>
+				<textarea
+					bind:value={promptText}
+					onkeydown={(e) => { if ((e.metaKey || e.shiftKey) && e.key === 'Enter') { e.preventDefault(); runPrompt(); } }}
+					disabled={prompting || showDiff}
+					rows="3"
+					placeholder={promptMode === 'edit' ? 'Type an instruction\u2026 e.g. "make it shorter"' : 'Describe what to write\u2026 e.g. "write about AI trends"'}
+					class="flex-1 bg-transparent text-sm font-mono focus:outline-none placeholder:opacity-30 disabled:opacity-40 resize-y"
+				></textarea>
+				{#if prompting}
+					<button
+						type="button"
+						onclick={stopPrompt}
+						class="self-end flex items-center gap-1.5 px-3 py-1 text-xs border border-red-400/50 text-red-400 hover:bg-red-400/10 transition-colors"
+					>
+						<Square size={12} class="fill-current" />
+						Stop
+					</button>
+				{:else}
+					<button
+						type="button"
+						onclick={runPrompt}
+						disabled={!promptText.trim() || showDiff}
+						class="self-end px-3 py-1 text-xs border border-white/30 hover:border-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+					>
+						Run <span class="opacity-40 ml-1">⇧↵</span>
+					</button>
+				{/if}
+			</div>
+
 			<!-- Editor + Suggestions layout -->
-			<div class="grid {suggestions.length > 0 ? 'grid-cols-1 md:grid-cols-[1fr_320px]' : 'grid-cols-1'} gap-4">
-				<!-- Left: Editor/Preview -->
+			<div class="grid {suggestions.length > 0 && !showDiff ? 'grid-cols-1 md:grid-cols-[1fr_320px]' : 'grid-cols-1'} gap-4">
+				<!-- Left: Editor/Preview/Diff -->
 				<div>
-					{#if activeTab === 'write'}
+					{#if showDiff}
+						<!-- Accept / Reject buttons (sticky top) -->
+						<div class="flex items-center gap-3 px-4 py-3 border border-white/30 border-t-0 bg-white/5 sticky top-0 z-10">
+							<button
+								type="button"
+								onclick={acceptDiff}
+								class="flex items-center gap-1.5 px-4 py-1.5 text-xs bg-green-400/20 text-green-400 border border-green-400/40 hover:bg-green-400/30 transition-colors"
+							>
+								<Check size={14} />
+								Accept Changes
+							</button>
+							<button
+								type="button"
+								onclick={rejectDiff}
+								class="flex items-center gap-1.5 px-4 py-1.5 text-xs bg-red-400/10 text-red-400 border border-red-400/30 hover:bg-red-400/20 transition-colors"
+							>
+								<X size={14} />
+								Reject Changes
+							</button>
+							<span class="text-xs opacity-40 ml-auto">Esc to reject</span>
+						</div>
+						<!-- Diff view -->
+						<div class="w-full bg-black/30 border border-white/30 border-t-0 px-0 py-0 min-h-[480px] max-h-[600px] overflow-y-auto font-mono text-sm">
+							{#each diffResult as chunk}
+								{#if chunk.type === 'collapsed'}
+									<div class="px-4 py-2 text-center text-xs opacity-40 bg-white/5 border-y border-white/10">
+										... {chunk.count} unchanged line{chunk.count !== 1 ? 's' : ''} ...
+									</div>
+								{:else}
+									{#each chunk.lines as line}
+										{#if chunk.type === 'added'}
+											<div class="px-4 py-0.5 bg-green-400/10 text-green-400 border-l-2 border-green-400">
+												<span class="select-none opacity-50 mr-2">+</span>{line}
+											</div>
+										{:else if chunk.type === 'removed'}
+											<div class="px-4 py-0.5 bg-red-400/10 text-red-400 border-l-2 border-red-400">
+												<span class="select-none opacity-50 mr-2">-</span>{line}
+											</div>
+										{:else}
+											<div class="px-4 py-0.5 opacity-60">
+												<span class="select-none opacity-30 mr-2">&nbsp;</span>{line}
+											</div>
+										{/if}
+									{/each}
+								{/if}
+							{/each}
+						</div>
+					{:else if activeTab === 'write'}
 						<textarea
 							id="content"
 							name="content"
 							bind:value={content}
 							bind:this={textareaEl}
+							oninput={() => clearError('content')}
 							rows="20"
-							required
 							placeholder="Write your markdown here..."
-							class="w-full bg-black/30 border border-white border-t-0 px-4 py-3 text-sm font-mono focus:outline-none resize-y"
+							class="w-full bg-black/30 border border-t-0 px-4 py-3 text-sm font-mono focus:outline-none resize-y {errors.content ? 'border-red-400' : 'border-white'}"
 						></textarea>
+						{#if errors.content}<p class="text-red-400 text-xs mt-1">{errors.content}</p>{/if}
 					{:else}
 						<div
 							class="w-full bg-black/30 border border-white border-t-0 px-4 py-3 min-h-[480px] prose prose-invert prose-sm max-w-none"
@@ -338,7 +545,7 @@
 				</div>
 
 				<!-- Right: Suggestions sidebar -->
-				{#if suggestions.length > 0}
+				{#if suggestions.length > 0 && !showDiff}
 					<div class="border border-white/30 bg-white/5 md:sticky md:top-4 md:self-start md:max-h-[calc(100vh-8rem)] md:overflow-y-auto">
 						<div class="flex items-center justify-between px-3 py-2 border-b border-white/20">
 							<span class="text-xs opacity-70">
@@ -427,20 +634,26 @@
 			</div>
 		</div>
 
-		<!-- AI error message -->
+		<!-- AI error messages -->
 		{#if reviewError}
 			<div class="border border-red-400/50 bg-red-400/10 px-4 py-3 text-sm">
 				<p class="text-red-400">Review failed: {reviewError}</p>
 			</div>
 		{/if}
 
+		{#if promptError}
+			<div class="border border-red-400/50 bg-red-400/10 px-4 py-3 text-sm">
+				<p class="text-red-400">AI prompt failed: {promptError}</p>
+			</div>
+		{/if}
+
 		<div class="flex items-center justify-between">
 			<label class="flex items-center gap-2 text-sm cursor-pointer">
 				<input type="checkbox" name="published" bind:checked={published} class="accent-white" />
-				Published
+				Publish
 			</label>
 
-			<button type="submit" class="btn">
+			<button type="submit" disabled={showDiff} class="btn disabled:opacity-30 disabled:cursor-not-allowed">
 				{post.slug ? 'UPDATE' : 'CREATE'} POST
 			</button>
 		</div>

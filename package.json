@@ -46,6 +46,7 @@
 		"@neondatabase/serverless": "^1.0.2",
 		"@resvg/resvg-js": "^2.6.2",
 		"bcryptjs": "^3.0.3",
+		"diff": "^8.0.3",
 		"drizzle-orm": "^0.45.1",
 		"marked": "^17.0.1",
 		"satori": "^0.19.1"

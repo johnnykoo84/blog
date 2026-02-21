@@ -65,7 +65,7 @@ export async function POST({ request, cookies }) {
 
 	try {
 		const message = await client.messages.create({
-			model: 'claude-sonnet-4-20250514',
+			model: 'claude-sonnet-4-6',
 			max_tokens: level === 'max' ? 4096 : 2048,
 			system: `${SYSTEM_BASE}\n\n${levelInstruction}`,
 			messages: [
