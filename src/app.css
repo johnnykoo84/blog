@@ -113,6 +113,15 @@
 		padding: 12px;
 	}
 
+	/* Override prose heading colors to respect theme */
+	.prose :where(h1, h2, h3, h4, h5, h6):not(:where([class~='not-prose'] *)) {
+		color: rgb(var(--foreground));
+	}
+
+	.prose :where(strong):not(:where([class~='not-prose'] *)) {
+		color: rgb(var(--foreground));
+	}
+
 	/* Cusdis Comment System Styling - Fix iframe */
 	#cusdis_thread iframe {
 		width: 100% !important;
