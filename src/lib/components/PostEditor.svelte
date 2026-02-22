@@ -123,8 +123,10 @@
 			});
 
 			if (!res.ok) {
-				const data = await res.json();
-				throw new Error(data.error || `HTTP ${res.status}`);
+				const text = await res.text();
+				let msg = `HTTP ${res.status}`;
+				try { msg = JSON.parse(text).error || msg; } catch { msg = text.slice(0, 100) || msg; }
+				throw new Error(msg);
 			}
 
 			const data = await res.json();
@@ -229,8 +231,10 @@
 			});
 
 			if (!res.ok) {
-				const data = await res.json();
-				throw new Error(data.error || `HTTP ${res.status}`);
+				const text = await res.text();
+				let msg = `HTTP ${res.status}`;
+				try { msg = JSON.parse(text).error || msg; } catch { msg = text.slice(0, 100) || msg; }
+				throw new Error(msg);
 			}
 
 			const data = await res.json();
