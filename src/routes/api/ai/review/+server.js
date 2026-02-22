@@ -48,6 +48,8 @@ For structural suggestions ([구조], [추가], [삭제 권장]):
 Be thorough and give actionable feedback. The author wants real editorial help, not gentle nudges.`
 };
 
+export const config = { maxDuration: 60 };
+
 export async function POST({ request, cookies }) {
 	const sessionId = cookies.get('session_id');
 	const session = await validateSession(sessionId);

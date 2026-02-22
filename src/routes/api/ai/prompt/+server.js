@@ -41,6 +41,8 @@ IMPORTANT:
 - Use appropriate markdown formatting (headings, lists, emphasis).
 - Default to Korean unless the instruction specifies otherwise.`;
 
+export const config = { maxDuration: 60 };
+
 export async function POST({ request, cookies }) {
 	const sessionId = cookies.get('session_id');
 	const session = await validateSession(sessionId);
