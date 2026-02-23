@@ -4,8 +4,8 @@
 	import ViewCount from '$lib/components/ViewCount.svelte';
 	import LikeDislike from '$lib/components/LikeDislike.svelte';
 	import ShareButtons from '$lib/components/ShareButtons.svelte';
-	import { enableComments } from '$lib/config';
-	import { siteLink } from '$lib/config';
+	import { enableComments, siteLink } from '$lib/config';
+	import { Settings } from '@lucide/svelte';
 
 	let { data } = $props();
 
@@ -14,6 +14,7 @@
 	const PostContent = data.PostContent;
 	const htmlContent = data.htmlContent;
 	const isDbPost = data.source === 'db';
+	const isAdmin = data.isAdmin;
 	const postId = slug;
 	const pageUrl = `${siteLink}/${slug}`;
 	const ogImageUrl = `${siteLink}/api/og/${slug}?title=${encodeURIComponent(title)}`;
@@ -38,7 +39,14 @@
 
 <article class="max-w-4xl mx-auto px-4 py-8">
 	<!-- Title -->
-	<h1 class="text-xl font-bold font-mono mb-3" style="color: rgb(var(--foreground));">{title}</h1>
+	<div class="flex items-center gap-2 mb-3">
+		<h1 class="text-xl font-bold font-mono" style="color: rgb(var(--foreground));">{title}</h1>
+		{#if isAdmin}
+			<a href="/admin/posts/{slug}/edit" title="Edit post" class="opacity-40 hover:opacity-100 transition-opacity" style="color: rgb(var(--muted));">
+				<Settings size={18} />
+			</a>
+		{/if}
+	</div>
 
 	<!-- Meta Info -->
 	<div class="text-xs mb-6 font-mono pb-3" style="border-bottom: 1px solid rgb(var(--muted)); color: rgb(var(--muted));">

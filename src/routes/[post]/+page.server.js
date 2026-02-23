@@ -1,7 +1,9 @@
 import { sql } from '$lib/server/db.js';
 import { marked } from 'marked';
 
-export async function load({ params }) {
+export async function load({ params, locals }) {
+	const isAdmin = locals.isAdmin;
+
 	// Try DB first
 	try {
 		const rows = await sql`
@@ -12,6 +14,7 @@ export async function load({ params }) {
 		if (post) {
 			return {
 				source: 'db',
+				isAdmin,
 				htmlContent: marked(post.content),
 				meta: {
 					title: post.title,
@@ -27,5 +30,5 @@ export async function load({ params }) {
 	}
 
 	// No DB post found — let +page.js handle .md file
-	return { source: 'md' };
+	return { source: 'md', isAdmin };
 }
