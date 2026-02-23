@@ -1,14 +1,26 @@
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { initWasm, Resvg } from '@resvg/resvg-wasm';
+import { readFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 
 export const prerender = false;
 
+const require = createRequire(import.meta.url);
 let fontCache = null;
+let wasmInitialized = false;
+
+async function initResvg() {
+	if (wasmInitialized) return;
+	const wasmPath = require.resolve('@resvg/resvg-wasm/index_bg.wasm');
+	const wasmBuffer = await readFile(wasmPath);
+	await initWasm(wasmBuffer);
+	wasmInitialized = true;
+}
 
 async function getFont() {
 	if (fontCache) return fontCache;
 	const res = await fetch(
-		'https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/Galmuri11.woff'
+		'https://cdn.jsdelivr.net/npm/galmuri/dist/Galmuri11.ttf'
 	);
 	fontCache = await res.arrayBuffer();
 	return fontCache;
@@ -17,6 +29,7 @@ async function getFont() {
 export async function GET({ url }) {
 	const title = url.searchParams.get('title') || 'bloKoo';
 
+	await initResvg();
 	const fontData = await getFont();
 
 	const svg = await satori(
