@@ -1,3 +1,4 @@
+import { error } from '@sveltejs/kit';
 import { sql } from '$lib/server/db.js';
 import { marked } from 'marked';
 
@@ -7,14 +8,19 @@ export async function load({ params, locals }) {
 	// Try DB first
 	try {
 		const rows = await sql`
-			SELECT * FROM posts WHERE slug = ${params.post} AND published = true
+			SELECT * FROM posts WHERE slug = ${params.post}
 		`;
 		const post = rows[0];
 
 		if (post) {
+			if (!post.published && !isAdmin) {
+				throw error(404, 'Post not found');
+			}
+
 			return {
 				source: 'db',
 				isAdmin,
+				isDraft: !post.published,
 				htmlContent: marked(post.content),
 				meta: {
 					title: post.title,
@@ -25,7 +31,9 @@ export async function load({ params, locals }) {
 				}
 			};
 		}
-	} catch {
+	} catch (err) {
+		// Re-throw SvelteKit errors (like our 404)
+		if (err?.status) throw err;
 		// DB not available, fall through to .md
 	}
 

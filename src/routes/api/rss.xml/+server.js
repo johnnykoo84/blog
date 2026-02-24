@@ -11,7 +11,9 @@ export const GET = async () => {
 			return { ...metadata, slug };
 		})
 	).then((posts) => {
-		return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+		return posts
+			.filter((post) => post.published !== false)
+			.sort((a, b) => new Date(b.date) - new Date(a.date));
 	});
 
 	const body = render(data);

@@ -15,6 +15,7 @@
 	const htmlContent = data.htmlContent;
 	const isDbPost = data.source === 'db';
 	const isAdmin = data.isAdmin;
+	const isDraft = data.isDraft;
 	const postId = slug;
 	const pageUrl = `${siteLink}/${slug}`;
 	const ogImageUrl = `${siteLink}/api/og/${slug}?title=${encodeURIComponent(title)}`;
@@ -38,6 +39,12 @@
 </svelte:head>
 
 <article class="max-w-4xl mx-auto px-4 py-8">
+	{#if isDraft}
+		<div class="mb-4 px-3 py-2 text-xs font-mono rounded border" style="color: rgb(var(--accent)); border-color: rgb(var(--accent)); background: rgba(var(--accent), 0.1);">
+			Draft — only visible to admins
+		</div>
+	{/if}
+
 	<!-- Title -->
 	<div class="flex items-center gap-2 mb-3">
 		<h1 class="text-xl font-bold font-mono" style="color: rgb(var(--foreground));">{title}</h1>

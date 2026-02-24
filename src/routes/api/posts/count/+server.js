@@ -2,8 +2,10 @@ import { json } from '@sveltejs/kit';
 import { sql } from '$lib/server/db.js';
 
 export const GET = async () => {
-	const mdPosts = import.meta.glob(`$lib/posts/*.md`);
-	const mdSlugs = Object.keys(mdPosts).map((path) => path.split('/').pop().slice(0, -3));
+	const mdEntries = Object.entries(import.meta.glob(`$lib/posts/*.md`, { eager: true }));
+	const mdSlugs = mdEntries
+		.filter(([, mod]) => mod.metadata?.published !== false)
+		.map(([path]) => path.split('/').pop().slice(0, -3));
 
 	let dbSlugs = new Set();
 	try {

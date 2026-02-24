@@ -10,8 +10,14 @@ export const load = async ({ params, data }) => {
 	try {
 		const post = await import(`../../lib/posts/${params.post}.md`);
 
+		if (post.metadata.published === false && !data.isAdmin) {
+			error(404, 'Post not found');
+		}
+
 		return {
 			source: 'md',
+			isAdmin: data.isAdmin,
+			isDraft: post.metadata.published === false,
 			PostContent: post.default,
 			meta: { ...post.metadata, slug: params.post }
 		};
