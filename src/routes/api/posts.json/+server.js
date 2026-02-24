@@ -17,9 +17,10 @@ export const GET = async ({ url }) => {
 	}
 
 	// Merge and deduplicate (DB posts take priority by slug)
-	const slugs = new Set(dbPosts.map((p) => p.slug));
-	const merged = [...dbPosts, ...mdPosts.filter((p) => !slugs.has(p.slug))];
-	merged.sort((a, b) => new Date(b.date) - new Date(a.date));
+	const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+	const merged = [...dbPosts, ...mdPosts.filter((p) => !dbSlugs.has(p.slug))]
+		.filter((p) => p.published !== false)
+		.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 	return json(merged.slice(offset, offset + postsPerPage));
 };
