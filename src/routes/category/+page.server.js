@@ -1,11 +1,17 @@
-export const load = async ({ url, fetch }) => {
-	const res = await fetch(`${url.origin}/api/posts.json`);
-	let posts = await res.json();
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
+
+export const load = async () => {
+	let posts = [];
+	try {
+		posts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
 
 	let uniqueCategories = {};
 
 	posts.forEach((post) => {
-		post.categories.forEach((category) => {
+		(post.categories || []).forEach((category) => {
 			if (uniqueCategories.hasOwnProperty(category)) {
 				uniqueCategories[category].count += 1;
 			} else {

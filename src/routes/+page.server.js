@@ -1,9 +1,16 @@
-export const load = async ({ url, fetch }) => {
-	const postRes = await fetch(`${url.origin}/api/posts.json`);
-	const posts = await postRes.json();
+import { postsPerPage } from '$lib/config';
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
 
-	const totalRes = await fetch(`${url.origin}/api/posts/count`);
-	const total = await totalRes.json();
+export const load = async () => {
+	let dbPosts = [];
+	try {
+		dbPosts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
+
+	const posts = dbPosts.slice(0, postsPerPage);
+	const total = dbPosts.length;
 
 	return { posts, total };
 };

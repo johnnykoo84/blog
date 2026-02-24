@@ -1,22 +1,17 @@
-// IMPORTANT: update all these property values in src/lib/config.js
 import { siteTitle, siteDescription, siteURL, siteLink } from '$lib/config';
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
 
-export const prerender = true;
+export const prerender = false;
 
 export const GET = async () => {
-	const data = await Promise.all(
-		Object.entries(import.meta.glob('$lib/posts/*.md')).map(async ([path, page]) => {
-			const { metadata } = await page();
-			const slug = path.split('/').pop().split('.').shift();
-			return { ...metadata, slug };
-		})
-	).then((posts) => {
-		return posts
-			.filter((post) => post.published !== false)
-			.sort((a, b) => new Date(b.date) - new Date(a.date));
-	});
+	let posts = [];
+	try {
+		posts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
 
-	const body = render(data);
+	const body = render(posts);
 	const headers = {
 		'Cache-Control': `max-age=0, s-max-age=${600}`,
 		'Content-Type': 'application/xml'
@@ -27,7 +22,6 @@ export const GET = async () => {
 	});
 };
 
-//Be sure to review and replace any applicable content below!
 const render = (posts) => `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>

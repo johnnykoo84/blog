@@ -1,15 +1,23 @@
-import fetchPosts from '$lib/assets/js/fetchPosts';
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
 
 export const load = async ({ params }) => {
 	const category = params.category;
-	const page = params.page || 1;
-	const options = { category, limit: -1 };
-	const { posts } = await fetchPosts(options);
+
+	let dbPosts = [];
+	try {
+		dbPosts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
+
+	const posts = dbPosts.filter(
+		(p) => p.categories && p.categories.includes(category)
+	);
 
 	return {
 		posts,
 		category,
-		page,
+		page: 1,
 		total: posts.length
 	};
 };

@@ -1,28 +1,35 @@
 import { redirect } from '@sveltejs/kit';
 import { postsPerPage } from '$lib/config';
-import fetchPosts from '$lib/assets/js/fetchPosts';
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
 
 export const prerender = false;
 
-export const load = async ({ url, params, fetch }) => {
+export const load = async ({ params }) => {
 	const page = parseInt(params.page) || 1;
 	const { category } = params;
 
-	// Prevents duplication of page 1 as the index page
 	if (page <= 1) {
 		redirect(301, `/category/${category}`);
 	}
 
-	let offset = page * postsPerPage - postsPerPage;
+	let dbPosts = [];
+	try {
+		dbPosts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
 
-	const totalPostsRes = await fetch(`${url.origin}/api/posts/count`);
-	const total = await totalPostsRes.json();
-	const { posts } = await fetchPosts({ offset, page });
+	const filtered = dbPosts.filter(
+		(p) => p.categories && p.categories.includes(category)
+	);
+
+	const offset = (page - 1) * postsPerPage;
+	const posts = filtered.slice(offset, offset + postsPerPage);
 
 	return {
 		posts,
 		page,
 		category,
-		totalPosts: total
+		totalPosts: filtered.length
 	};
 };

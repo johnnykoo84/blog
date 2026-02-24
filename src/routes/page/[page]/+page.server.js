@@ -1,24 +1,27 @@
 import { redirect } from '@sveltejs/kit';
+import { postsPerPage } from '$lib/config';
+import { fetchDbPosts } from '$lib/server/fetchDbPosts.js';
 
-export const load = async ({ url, params, fetch }) => {
+export const load = async ({ params }) => {
 	const page = parseInt(params.page) || 1;
 
-	// Keeps from duplicating the blog index route as page 1
 	if (page <= 1) {
 		redirect(301, '/');
 	}
 
-	const [postRes, totalRes] = await Promise.all([
-		fetch(`${url.origin}/api/posts.json?page=${page}`),
-		fetch(`${url.origin}/api/posts/count`)
-	]);
+	let dbPosts = [];
+	try {
+		dbPosts = await fetchDbPosts();
+	} catch {
+		// DB not available
+	}
 
-	const posts = await postRes.json();
-	const total = await totalRes.json();
+	const offset = (page - 1) * postsPerPage;
+	const posts = dbPosts.slice(offset, offset + postsPerPage);
 
 	return {
 		posts,
 		page,
-		totalPosts: total
+		totalPosts: dbPosts.length
 	};
 };
